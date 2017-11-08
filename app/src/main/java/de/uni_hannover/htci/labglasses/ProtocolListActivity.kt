@@ -2,19 +2,17 @@ package de.uni_hannover.htci.labglasses
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
-import android.support.design.widget.Snackbar
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
 import de.uni_hannover.htci.labglasses.dummy.DummyContent
+import de.uni_hannover.htci.labglasses.utils.inflate
 import kotlinx.android.synthetic.main.activity_protocol_list.*
-import kotlinx.android.synthetic.main.protocol_list_content.view.*
-
 import kotlinx.android.synthetic.main.protocol_list.*
+import kotlinx.android.synthetic.main.protocol_list_content.view.*
 
 /**
  * An activity representing a list of Pings. This activity
@@ -31,6 +29,15 @@ class ProtocolListActivity : AppCompatActivity() {
      * device.
      */
     private var mTwoPane: Boolean = false
+
+    private val protocolListView: RecyclerView by lazy {
+        protocol_list.adapter = SimpleItemRecyclerViewAdapter(
+                this,
+                DummyContent.ITEMS,
+                mTwoPane
+        )
+        protocol_list
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +58,11 @@ class ProtocolListActivity : AppCompatActivity() {
             // activity should be in two-pane mode.
             mTwoPane = true
         }
+
+        //improve performance, all our cells are fixed size
+        protocolListView.setHasFixedSize(true)
+
+
 
         setupRecyclerView(protocol_list)
     }
@@ -88,8 +100,7 @@ class ProtocolListActivity : AppCompatActivity() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.protocol_list_content, parent, false)
+            val view = parent.inflate(R.layout.protocol_list_content)
             return ViewHolder(view)
         }
 
