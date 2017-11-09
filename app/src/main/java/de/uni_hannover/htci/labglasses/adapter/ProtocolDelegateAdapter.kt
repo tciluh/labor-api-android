@@ -13,8 +13,8 @@ import kotlinx.android.synthetic.main.protocol_list_content.view.*
 /**
  * Created by sl33k on 11/8/17.
  */
-class ProtocolAdapter : ViewTypeDelegateAdapter<ProtocolAdapter.ViewHolder> {
-    val TAG = "ProtocolAdapter"
+class ProtocolDelegateAdapter : ViewTypeDelegateAdapter<ProtocolDelegateAdapter.ViewHolder> {
+    val TAG = "ProtocolDelegateAdapter"
 
     override fun createViewHolder(parent: ViewGroup): ViewHolder {
         val view = parent.inflate(R.layout.protocol_list_content)
