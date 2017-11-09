@@ -8,7 +8,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import de.uni_hannover.htci.labglasses.adapter.ProtocolListAdapter
 import de.uni_hannover.htci.labglasses.dummy.DummyContent
+import de.uni_hannover.htci.labglasses.model.Instruction
+import de.uni_hannover.htci.labglasses.model.Protocol
+import de.uni_hannover.htci.labglasses.model.Result
 import de.uni_hannover.htci.labglasses.utils.inflate
 import kotlinx.android.synthetic.main.activity_protocol_list.*
 import kotlinx.android.synthetic.main.protocol_list.*
@@ -30,15 +34,6 @@ class ProtocolListActivity : AppCompatActivity() {
      */
     private var mTwoPane: Boolean = false
 
-    private val protocolListView: RecyclerView by lazy {
-        protocol_list.adapter = SimpleItemRecyclerViewAdapter(
-                this,
-                DummyContent.ITEMS,
-                mTwoPane
-        )
-        protocol_list
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_protocol_list)
@@ -59,8 +54,6 @@ class ProtocolListActivity : AppCompatActivity() {
             mTwoPane = true
         }
 
-        //improve performance, all our cells are fixed size
-        protocolListView.setHasFixedSize(true)
 
 
 
@@ -68,7 +61,21 @@ class ProtocolListActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.adapter = SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane)
+        //improve performance, all our cells are fixed size
+        recyclerView.setHasFixedSize(true)
+        if (recyclerView.adapter == null) {
+            recyclerView.adapter = ProtocolListAdapter()
+        }
+        (recyclerView.adapter as ProtocolListAdapter).addProtocols(listOf(
+                Protocol(0, name = "some name", description = "some description",
+                        instructions = arrayOf(
+                                Instruction(id = 0, description = "bla", results = arrayOf(
+                                        Result(id = 0, description = "bla")
+                                ))
+                        )
+                )))
+        //recyclerView.adapter = SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane)
+
     }
 
     class SimpleItemRecyclerViewAdapter(private val mParentActivity: ProtocolListActivity,

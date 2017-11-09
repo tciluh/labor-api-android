@@ -2,6 +2,7 @@ package de.uni_hannover.htci.labglasses.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import de.uni_hannover.htci.labglasses.model.Protocol
 
 /**
  * Created by sl33k on 11/9/17.
@@ -32,6 +33,15 @@ class ProtocolListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val item = items[position]
         val type = item.viewType.ordinal
         delegateAdapters[type]?.bindViewHolder(holder, item)
+    }
+
+    fun addProtocols(protocols: List<Protocol>) {
+        val initialSize = items.size
+        if (items.addAll(protocols)) {
+            notifyItemRangeInserted(initialSize, protocols.size)
+        } else {
+            throw IllegalStateException("can't insert protocols into items")
+        }
     }
 
 
