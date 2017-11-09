@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.protocol_list_content.view.*
 /**
  * Created by sl33k on 11/8/17.
  */
-class ProtocolDelegateAdapter : ViewTypeDelegateAdapter<ProtocolDelegateAdapter.ViewHolder> {
+class ProtocolDelegateAdapter : ViewTypeDelegateAdapter {
     val TAG = "ProtocolDelegateAdapter"
 
     override fun createViewHolder(parent: ViewGroup?): ViewHolder {
@@ -21,10 +21,11 @@ class ProtocolDelegateAdapter : ViewTypeDelegateAdapter<ProtocolDelegateAdapter.
         return ViewHolder(view)
     }
 
-    override fun bindViewHolder(holder: ViewHolder, item: ViewType) {
+    override fun bindViewHolder(holder: RecyclerView.ViewHolder?, item: ViewType) {
+        val viewHolder = holder as? ViewHolder ?: throw IllegalStateException("can't cast ViewHolder in bindViewHolder")
         if (item is Protocol) {
-            holder.idView.text = item.id.toString()
-            holder.contentView.text = item.description
+            viewHolder.idView.text = item.id.toString()
+            viewHolder.contentView.text = item.description
         } else {
             Log.e(TAG, "item is not of Protocol Type (is ${item.javaClass}) can't bind view")
         }
