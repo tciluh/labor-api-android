@@ -11,8 +11,8 @@ import de.uni_hannover.htci.labglasses.utils.inflate
  */
 
 class LoadingDelegateAdapter : ViewTypeDelegateAdapter<LoadingDelegateAdapter.LoadingViewHolder> {
-    override fun createViewHolder(parent: ViewGroup): LoadingViewHolder {
-        val view = parent.inflate(R.layout.protocol_list_loading)
+    override fun createViewHolder(parent: ViewGroup?): LoadingViewHolder {
+        val view = parent?.inflate(R.layout.protocol_list_loading)
         return LoadingViewHolder(view)
     }
 
@@ -20,5 +20,5 @@ class LoadingDelegateAdapter : ViewTypeDelegateAdapter<LoadingDelegateAdapter.Lo
         //do nothing. everything is laid out in the xml
     }
 
-    class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class LoadingViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView)
 }

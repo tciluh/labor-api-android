@@ -16,8 +16,8 @@ import kotlinx.android.synthetic.main.protocol_list_content.view.*
 class ProtocolDelegateAdapter : ViewTypeDelegateAdapter<ProtocolDelegateAdapter.ViewHolder> {
     val TAG = "ProtocolDelegateAdapter"
 
-    override fun createViewHolder(parent: ViewGroup): ViewHolder {
-        val view = parent.inflate(R.layout.protocol_list_content)
+    override fun createViewHolder(parent: ViewGroup?): ViewHolder {
+        val view = parent?.inflate(R.layout.protocol_list_content)
         return ViewHolder(view)
     }
 
@@ -30,8 +30,8 @@ class ProtocolDelegateAdapter : ViewTypeDelegateAdapter<ProtocolDelegateAdapter.
         }
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val idView: TextView = itemView.id_text
-        val contentView: TextView = itemView.content
+    class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+        val idView: TextView = itemView?.id_text ?: throw IllegalStateException("cant find id_text view in protocol_list_content")
+        val contentView: TextView = itemView?.content ?: throw IllegalStateException("cant find content view in protocol_list_content")
     }
 }
