@@ -2,6 +2,8 @@ package de.uni_hannover.htci.labglasses.model
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
+import de.uni_hannover.htci.labglasses.adapter.AdapterType
+import de.uni_hannover.htci.labglasses.adapter.ViewType
 import kotlinx.android.parcel.Parcelize
 
 
@@ -10,7 +12,7 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 @SuppressLint("ParcelCreator")
-class Protocol(val id: Int, val name: String, val description: String, val instructions: Array<Instruction>) : Parcelable {
+class Protocol(val id: Int, val name: String, val description: String, val instructions: Array<Instruction>) : Parcelable, ViewType {
     override fun equals(other: Any?): Boolean{
         return when (other) {
             this -> return true
@@ -18,5 +20,8 @@ class Protocol(val id: Int, val name: String, val description: String, val instr
             else -> return false
         }
     }
+
+    override val viewType = AdapterType.PROTOCOL
+
     override fun hashCode(): Int = this.id
 }
