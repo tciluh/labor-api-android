@@ -11,6 +11,8 @@ androidExtensions {
 
 android {
     compileSdkVersion 26
+    buildToolsVersion "27.0.1"
+
     defaultConfig {
         applicationId "de.uni_hannover.htci.labglasses"
         minSdkVersion 15
