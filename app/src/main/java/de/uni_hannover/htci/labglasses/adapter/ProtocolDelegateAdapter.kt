@@ -26,8 +26,8 @@ class ProtocolDelegateAdapter(override val selectHandler: (ViewType) -> Unit)
     override fun bindViewHolder(holder: RecyclerView.ViewHolder?, item: ViewType) {
         val viewHolder = holder as? ViewHolder ?: throw IllegalStateException("can't cast ViewHolder in bindViewHolder")
         if (item is Protocol) {
-            viewHolder.idView.text = item.id.toString()
-            viewHolder.contentView.text = item.description
+            viewHolder.nameView.text = item.name
+            viewHolder.descriptionView.text = item.description
             //bind click handler
             viewHolder.itemView.setOnClickListener { selectHandler(item) }
         } else {
@@ -36,7 +36,7 @@ class ProtocolDelegateAdapter(override val selectHandler: (ViewType) -> Unit)
     }
 
     class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-        val idView: TextView = itemView?.id_text ?: throw IllegalStateException("cant find id_text view in protocol_list_content")
-        val contentView: TextView = itemView?.content ?: throw IllegalStateException("cant find content view in protocol_list_content")
+        val nameView: TextView = itemView?.name ?: throw IllegalStateException("cant find id_text view in protocol_list_content")
+        val descriptionView: TextView = itemView?.description ?: throw IllegalStateException("cant find content view in protocol_list_content")
     }
 }
