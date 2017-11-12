@@ -2,9 +2,8 @@ package de.uni_hannover.htci.labglasses
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.support.v4.app.NavUtils
+import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_protocol_detail.*
 
@@ -20,11 +19,6 @@ class ProtocolDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_protocol_detail)
         setSupportActionBar(detail_toolbar)
-
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
 
         // Show the Up button in the action bar.
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -42,8 +36,8 @@ class ProtocolDetailActivity : AppCompatActivity() {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             val arguments = Bundle()
-            arguments.putString(ProtocolDetailFragment.ARG_ITEM_ID,
-                    intent.getStringExtra(ProtocolDetailFragment.ARG_ITEM_ID))
+            arguments.putParcelable(ProtocolDetailFragment.PROTOCOL_ITEM,
+                    intent.getParcelableExtra(ProtocolDetailFragment.PROTOCOL_ITEM))
             val fragment = ProtocolDetailFragment()
             fragment.arguments = arguments
             supportFragmentManager.beginTransaction()
