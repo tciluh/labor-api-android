@@ -9,11 +9,8 @@ import de.uni_hannover.htci.labglasses.model.Protocol
  */
 class ProtocolListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    //init items with loading item preset
-    private val loadingItem = object : ViewType {
-        override val viewType = AdapterType.LOADING
-    }
-    private var items: ArrayList<ViewType> = arrayListOf(loadingItem)
+
+    private var items: ArrayList<ViewType> = ArrayList()
     //init delegate adapters
     private val delegateAdapters = mapOf(
             AdapterType.LOADING.ordinal to LoadingDelegateAdapter(),
@@ -36,9 +33,14 @@ class ProtocolListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     fun addProtocols(protocols: List<Protocol>) {
+        //remove loading
+        //val index = items.indexOf(loadingItem)
+        //items.removeAt(index)
+        //notifyItemRemoved(index)
+        //add items
         val initialSize = items.size
         if (items.addAll(protocols)) {
-            notifyItemRangeInserted(initialSize, protocols.size)
+            notifyItemRangeInserted(initialSize - 1, protocols.size)
         } else {
             throw IllegalStateException("can't insert protocols into items")
         }
