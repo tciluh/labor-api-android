@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import de.uni_hannover.htci.labglasses.adapter.ProtocolListAdapter
 import de.uni_hannover.htci.labglasses.adapter.ViewType
 import de.uni_hannover.htci.labglasses.model.Instruction
@@ -11,6 +13,7 @@ import de.uni_hannover.htci.labglasses.model.Protocol
 import de.uni_hannover.htci.labglasses.model.Result
 import kotlinx.android.synthetic.main.activity_protocol_list.*
 import kotlinx.android.synthetic.main.protocol_list.*
+
 
 /**
  * An activity representing a list of Pings. This activity
@@ -35,6 +38,8 @@ class ProtocolListActivity : AppCompatActivity() {
 
     private val listAdapter: ProtocolListAdapter by lazy {
         recyclerView.adapter = ProtocolListAdapter(this::onItemSelect)
+        val dividerItemDecoration = DividerItemDecoration(recyclerView.context, VERTICAL)
+        recyclerView.addItemDecoration(dividerItemDecoration)
         recyclerView.adapter as ProtocolListAdapter
     }
 
@@ -53,19 +58,97 @@ class ProtocolListActivity : AppCompatActivity() {
             twoPaned = true
         }
 
-        swipeRefreshLayout.isRefreshing = true
+        //swipeRefreshLayout.isRefreshing = true
 
         //add mock protocols
-        listAdapter.addProtocols((listOf(
+        listAdapter.addProtocols(listOf(
                 Protocol(0, name = "some name", description = "some description",
                         instructions = arrayOf(
                                 Instruction(id = 0, description = "bla", results = arrayOf(
                                         Result(id = 0, description = "bla")
                                 ))
-                        )
-                ))))
+                        )),
 
-        swipeRefreshLayout.isRefreshing = false
+                Protocol(1, name = "some name", description = "some description",
+                        instructions = arrayOf(
+                                Instruction(id = 0, description = "bla", results = arrayOf(
+                                        Result(id = 0, description = "bla")
+                                ))
+                        )
+                ),
+                Protocol(1, name = "some name", description = "some description",
+                        instructions = arrayOf(
+                                Instruction(id = 0, description = "bla", results = arrayOf(
+                                        Result(id = 0, description = "bla")
+                                ))
+                        )
+                ),
+                Protocol(1, name = "some name", description = "some description",
+                        instructions = arrayOf(
+                                Instruction(id = 0, description = "bla", results = arrayOf(
+                                        Result(id = 0, description = "bla")
+                                ))
+                        )
+                ),
+                Protocol(1, name = "some name", description = "some description",
+                        instructions = arrayOf(
+                                Instruction(id = 0, description = "bla", results = arrayOf(
+                                        Result(id = 0, description = "bla")
+                                ))
+                        )
+                ),
+                Protocol(1, name = "some name", description = "some description",
+                        instructions = arrayOf(
+                                Instruction(id = 0, description = "bla", results = arrayOf(
+                                        Result(id = 0, description = "bla")
+                                ))
+                        )
+                ),
+                Protocol(1, name = "some name", description = "some description",
+                        instructions = arrayOf(
+                                Instruction(id = 0, description = "bla", results = arrayOf(
+                                        Result(id = 0, description = "bla")
+                                ))
+                        )
+                ),
+                Protocol(1, name = "some name", description = "some description",
+                        instructions = arrayOf(
+                                Instruction(id = 0, description = "bla", results = arrayOf(
+                                        Result(id = 0, description = "bla")
+                                ))
+                        )
+                ),
+                Protocol(1, name = "some name", description = "some description",
+                        instructions = arrayOf(
+                                Instruction(id = 0, description = "bla", results = arrayOf(
+                                        Result(id = 0, description = "bla")
+                                ))
+                        )
+                ),
+                Protocol(1, name = "some name", description = "some description",
+                        instructions = arrayOf(
+                                Instruction(id = 0, description = "bla", results = arrayOf(
+                                        Result(id = 0, description = "bla")
+                                ))
+                        )
+                ),
+                Protocol(1, name = "some name", description = "some description",
+                        instructions = arrayOf(
+                                Instruction(id = 0, description = "bla", results = arrayOf(
+                                        Result(id = 0, description = "bla")
+                                ))
+                        )
+                ),
+                Protocol(1, name = "some name", description = "some description",
+                        instructions = arrayOf(
+                                Instruction(id = 0, description = "bla", results = arrayOf(
+                                        Result(id = 0, description = "bla")
+                                ))
+                        )
+                )
+        ))
+
+        //swipeRefreshLayout.isRefreshing = false
     }
 
     private fun onItemSelect(item: ViewType){
@@ -74,7 +157,7 @@ class ProtocolListActivity : AppCompatActivity() {
                 if (twoPaned) {
                     val fragment = ProtocolDetailFragment().apply {
                         arguments = Bundle()
-                        arguments.putParcelable(ProtocolDetailFragment.ARG_ITEM_ID, item)
+                        arguments.putParcelable(ProtocolDetailFragment.PROTOCOL_ITEM, item)
                     }
                     this.supportFragmentManager
                             .beginTransaction()
@@ -82,7 +165,7 @@ class ProtocolListActivity : AppCompatActivity() {
                             .commit()
                 } else {
                     val intent = Intent(this, ProtocolDetailActivity::class.java).apply {
-                        putExtra(ProtocolDetailFragment.ARG_ITEM_ID, item)
+                        putExtra(ProtocolDetailFragment.PROTOCOL_ITEM, item)
                     }
                     this.startActivity(intent)
                 }
