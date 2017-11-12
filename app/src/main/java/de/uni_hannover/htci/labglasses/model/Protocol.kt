@@ -21,6 +21,7 @@ data class Protocol(val id: Int, val name: String, val description: String, val 
         }
     }
 
+    @Transient
     override val viewType = AdapterType.PROTOCOL
 
     override fun hashCode(): Int = this.id
