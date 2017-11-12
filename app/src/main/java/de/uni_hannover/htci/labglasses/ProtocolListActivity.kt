@@ -2,8 +2,6 @@ package de.uni_hannover.htci.labglasses
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -35,17 +33,22 @@ class ProtocolListActivity : AppCompatActivity() {
      */
     private var mTwoPane: Boolean = false
 
+    private val recyclerView by lazy {
+        protocol_list.setHasFixedSize(true)
+        protocol_list
+    }
+
+    private val listAdapter: ProtocolListAdapter by lazy {
+        recyclerView.adapter = ProtocolListAdapter()
+        recyclerView.adapter as ProtocolListAdapter
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_protocol_list)
 
         setSupportActionBar(toolbar)
         toolbar.title = title
-
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
 
         if (protocol_detail_container != null) {
             // The detail container view will be present only in the
@@ -57,29 +60,19 @@ class ProtocolListActivity : AppCompatActivity() {
 
         swipeRefreshLayout.isRefreshing = true
 
-
-
-
-        setupRecyclerView(protocol_list)
-    }
-
-    private fun setupRecyclerView(recyclerView: RecyclerView) {
-        //improve performance, all our cells are fixed size
-        recyclerView.setHasFixedSize(true)
-        if (recyclerView.adapter == null) {
-            recyclerView.adapter = ProtocolListAdapter()
-        }
-        (recyclerView.adapter as ProtocolListAdapter).addProtocols(listOf(
+        //add mock protocols
+        listAdapter.addProtocols((listOf(
                 Protocol(0, name = "some name", description = "some description",
                         instructions = arrayOf(
                                 Instruction(id = 0, description = "bla", results = arrayOf(
                                         Result(id = 0, description = "bla")
                                 ))
                         )
-                )))
-        //recyclerView.adapter = SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane)
+                ))))
 
+        swipeRefreshLayout.isRefreshing = false
     }
+
 
     class SimpleItemRecyclerViewAdapter(private val mParentActivity: ProtocolListActivity,
                                         private val mValues: List<DummyContent.DummyItem>,
