@@ -13,8 +13,10 @@ import kotlinx.android.synthetic.main.protocol_list_content.view.*
 /**
  * Created by sl33k on 11/8/17.
  */
-class ProtocolDelegateAdapter : ViewTypeDelegateAdapter {
-    val TAG = "ProtocolDelegateAdapter"
+class ProtocolDelegateAdapter(override val selectHandler: (ViewType) -> Unit)
+    : ViewTypeDelegateAdapter {
+
+    private val logTag = "ProtocolDelegateAdapter"
 
     override fun createViewHolder(parent: ViewGroup?): ViewHolder {
         val view = parent?.inflate(R.layout.protocol_list_content)
@@ -26,8 +28,10 @@ class ProtocolDelegateAdapter : ViewTypeDelegateAdapter {
         if (item is Protocol) {
             viewHolder.idView.text = item.id.toString()
             viewHolder.contentView.text = item.description
+            //bind click handler
+            viewHolder.itemView.setOnClickListener { selectHandler(item) }
         } else {
-            Log.e(TAG, "item is not of Protocol Type (is ${item.javaClass}) can't bind view")
+            Log.e(logTag, "item is not of Protocol Type (is ${item.javaClass}) can't bind view")
         }
     }
 
