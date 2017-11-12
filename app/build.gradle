@@ -59,5 +59,7 @@ dependencies {
     compile 'com.serjltt.moshi:moshi-lazy-adapters:2.1'
     //retrofit moshi converter
     compile 'com.squareup.retrofit2:converter-moshi:2.3.0'
+    //retrofit -> rxjava2 return types call adapter
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
 
 }
