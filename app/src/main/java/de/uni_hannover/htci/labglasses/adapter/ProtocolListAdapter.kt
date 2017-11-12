@@ -1,20 +1,21 @@
 package de.uni_hannover.htci.labglasses.adapter
 
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.view.ViewGroup
 import de.uni_hannover.htci.labglasses.model.Protocol
 
 /**
  * Created by sl33k on 11/9/17.
  */
-class ProtocolListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ProtocolListAdapter(onSelectHandler: (ViewType) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     private var items: ArrayList<ViewType> = ArrayList()
     //init delegate adapters
     private val delegateAdapters = mapOf(
-            AdapterType.LOADING.ordinal to LoadingDelegateAdapter(),
-            AdapterType.PROTOCOL.ordinal to ProtocolDelegateAdapter()
+            AdapterType.LOADING.ordinal to LoadingDelegateAdapter(onSelectHandler),
+            AdapterType.PROTOCOL.ordinal to ProtocolDelegateAdapter(onSelectHandler)
     )
 
     override fun getItemCount(): Int = items.size
