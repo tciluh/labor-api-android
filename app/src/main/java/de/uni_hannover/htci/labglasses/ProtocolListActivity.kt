@@ -3,6 +3,7 @@ package de.uni_hannover.htci.labglasses
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -53,6 +54,8 @@ class ProtocolListActivity : AppCompatActivity() {
             // activity should be in two-pane mode.
             mTwoPane = true
         }
+
+        swipeRefreshLayout.isRefreshing = true
 
 
 
