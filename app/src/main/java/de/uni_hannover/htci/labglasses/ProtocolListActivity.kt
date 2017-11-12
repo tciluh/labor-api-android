@@ -2,12 +2,16 @@ package de.uni_hannover.htci.labglasses
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ListAdapter
 import android.widget.TextView
 import de.uni_hannover.htci.labglasses.adapter.ProtocolListAdapter
+import de.uni_hannover.htci.labglasses.adapter.ViewType
+import de.uni_hannover.htci.labglasses.adapter.ViewTypeDelegateAdapter
 import de.uni_hannover.htci.labglasses.dummy.DummyContent
 import de.uni_hannover.htci.labglasses.model.Instruction
 import de.uni_hannover.htci.labglasses.model.Protocol
@@ -39,7 +43,7 @@ class ProtocolListActivity : AppCompatActivity() {
     }
 
     private val listAdapter: ProtocolListAdapter by lazy {
-        recyclerView.adapter = ProtocolListAdapter()
+        recyclerView.adapter = ProtocolListAdapter(this::onItemSelect)
         recyclerView.adapter as ProtocolListAdapter
     }
 
@@ -73,6 +77,12 @@ class ProtocolListActivity : AppCompatActivity() {
         swipeRefreshLayout.isRefreshing = false
     }
 
+    private fun onItemSelect(item: ViewType){
+        when(item){
+            is Protocol -> Snackbar.make(recyclerView,"Protocol Selected",1000 ).show()
+            else -> Snackbar.make(recyclerView,"Something else Selected",1000 ).show()
+        }
+    }
 
     class SimpleItemRecyclerViewAdapter(private val mParentActivity: ProtocolListActivity,
                                         private val mValues: List<DummyContent.DummyItem>,
