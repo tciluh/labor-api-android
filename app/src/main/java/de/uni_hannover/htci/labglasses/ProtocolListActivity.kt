@@ -6,13 +6,22 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
+import android.util.Log
+import com.serjltt.moshi.adapters.Wrapped
+import com.squareup.moshi.KotlinJsonAdapterFactory
+import com.squareup.moshi.Moshi
 import de.uni_hannover.htci.labglasses.adapter.ProtocolListAdapter
 import de.uni_hannover.htci.labglasses.adapter.ViewType
-import de.uni_hannover.htci.labglasses.model.Instruction
+import de.uni_hannover.htci.labglasses.api.LaborApi
 import de.uni_hannover.htci.labglasses.model.Protocol
-import de.uni_hannover.htci.labglasses.model.Result
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+
 import kotlinx.android.synthetic.main.activity_protocol_list.*
 import kotlinx.android.synthetic.main.protocol_list.*
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 
 /**
@@ -37,10 +46,35 @@ class ProtocolListActivity : AppCompatActivity() {
     }
 
     private val listAdapter: ProtocolListAdapter by lazy {
+        //create adapter
         recyclerView.adapter = ProtocolListAdapter(this::onItemSelect)
+        //setup cell divider
         val dividerItemDecoration = DividerItemDecoration(recyclerView.context, VERTICAL)
         recyclerView.addItemDecoration(dividerItemDecoration)
+        //last line is lazy return
         recyclerView.adapter as ProtocolListAdapter
+    }
+
+    private val moshi: Moshi by lazy {
+        Moshi.Builder()
+                .add(Wrapped.ADAPTER_FACTORY)
+                .add(KotlinJsonAdapterFactory())
+                .build()
+    }
+
+    private val retrofit: Retrofit by lazy {
+        //we want the subscription to run on a background thread
+        val rx2adapter = RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io())
+
+        Retrofit.Builder()
+                .baseUrl("http://192.168.1.21:3000/")
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .addCallAdapterFactory(rx2adapter)
+                .build()
+    }
+
+    private val protocolApi: LaborApi  by lazy {
+        retrofit.create(LaborApi::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,101 +92,27 @@ class ProtocolListActivity : AppCompatActivity() {
             twoPaned = true
         }
 
-        //swipeRefreshLayout.isRefreshing = true
+        swipeRefreshLayout.isRefreshing = true
 
-        //add mock protocols
-        listAdapter.addProtocols(listOf(
-                Protocol(0, name = "some name", description = "some description",
-                        instructions = arrayOf(
-                                Instruction(id = 0, description = "bla", results = arrayOf(
-                                        Result(id = 0, description = "bla")
-                                ))
-                        )),
+        //subscribe to the api to get all protocols
+        protocolApi.getProtocols()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ list ->
+                    swipeRefreshLayout.isRefreshing = false
+                    Log.d("ProtocolListActivity", "got api response: $list")
+                    listAdapter.addProtocols(list)
 
-                Protocol(1, name = "some name", description = "some description",
-                        instructions = arrayOf(
-                                Instruction(id = 0, description = "bla", results = arrayOf(
-                                        Result(id = 0, description = "bla")
-                                ))
-                        )
-                ),
-                Protocol(1, name = "some name", description = "some description",
-                        instructions = arrayOf(
-                                Instruction(id = 0, description = "bla", results = arrayOf(
-                                        Result(id = 0, description = "bla")
-                                ))
-                        )
-                ),
-                Protocol(1, name = "some name", description = "some description",
-                        instructions = arrayOf(
-                                Instruction(id = 0, description = "bla", results = arrayOf(
-                                        Result(id = 0, description = "bla")
-                                ))
-                        )
-                ),
-                Protocol(1, name = "some name", description = "some description",
-                        instructions = arrayOf(
-                                Instruction(id = 0, description = "bla", results = arrayOf(
-                                        Result(id = 0, description = "bla")
-                                ))
-                        )
-                ),
-                Protocol(1, name = "some name", description = "some description",
-                        instructions = arrayOf(
-                                Instruction(id = 0, description = "bla", results = arrayOf(
-                                        Result(id = 0, description = "bla")
-                                ))
-                        )
-                ),
-                Protocol(1, name = "some name", description = "some description",
-                        instructions = arrayOf(
-                                Instruction(id = 0, description = "bla", results = arrayOf(
-                                        Result(id = 0, description = "bla")
-                                ))
-                        )
-                ),
-                Protocol(1, name = "some name", description = "some description",
-                        instructions = arrayOf(
-                                Instruction(id = 0, description = "bla", results = arrayOf(
-                                        Result(id = 0, description = "bla")
-                                ))
-                        )
-                ),
-                Protocol(1, name = "some name", description = "some description",
-                        instructions = arrayOf(
-                                Instruction(id = 0, description = "bla", results = arrayOf(
-                                        Result(id = 0, description = "bla")
-                                ))
-                        )
-                ),
-                Protocol(1, name = "some name", description = "some description",
-                        instructions = arrayOf(
-                                Instruction(id = 0, description = "bla", results = arrayOf(
-                                        Result(id = 0, description = "bla")
-                                ))
-                        )
-                ),
-                Protocol(1, name = "some name", description = "some description",
-                        instructions = arrayOf(
-                                Instruction(id = 0, description = "bla", results = arrayOf(
-                                        Result(id = 0, description = "bla")
-                                ))
-                        )
-                ),
-                Protocol(1, name = "some name", description = "some description",
-                        instructions = arrayOf(
-                                Instruction(id = 0, description = "bla", results = arrayOf(
-                                        Result(id = 0, description = "bla")
-                                ))
-                        )
-                )
-        ))
+                }, { error ->
+                    Snackbar.make(recyclerView, "An Error occurred", 2000).show()
+                    Log.e("ProtocolListActivity", "error loading api data: $error")
+                })
+
 
         //swipeRefreshLayout.isRefreshing = false
     }
 
-    private fun onItemSelect(item: ViewType){
-        when(item){
+    private fun onItemSelect(item: ViewType) {
+        when (item) {
             is Protocol -> {
                 if (twoPaned) {
                     val fragment = ProtocolDetailFragment().apply {
