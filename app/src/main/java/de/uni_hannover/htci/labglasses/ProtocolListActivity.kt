@@ -2,11 +2,14 @@ package de.uni_hannover.htci.labglasses
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import com.serjltt.moshi.adapters.Wrapped
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
@@ -14,9 +17,11 @@ import de.uni_hannover.htci.labglasses.adapter.ProtocolListAdapter
 import de.uni_hannover.htci.labglasses.adapter.ViewType
 import de.uni_hannover.htci.labglasses.api.LaborApi
 import de.uni_hannover.htci.labglasses.model.Protocol
+import de.uni_hannover.htci.labglasses.utils.consume
+import de.uni_hannover.htci.labglasses.utils.withTransaction
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-
+import org.jetbrains.anko.startActivity
 import kotlinx.android.synthetic.main.activity_protocol_list.*
 import kotlinx.android.synthetic.main.protocol_list.*
 import retrofit2.Retrofit
@@ -32,7 +37,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-class ProtocolListActivity : AppCompatActivity() {
+class ProtocolListActivity : BaseActivity(){
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -92,6 +97,11 @@ class ProtocolListActivity : AppCompatActivity() {
             twoPaned = true
         }
 
+        //load protocols
+        refreshProtocols()
+    }
+
+    private fun refreshProtocols() {
         swipeRefreshLayout.isRefreshing = true
 
         //subscribe to the api to get all protocols
@@ -104,11 +114,9 @@ class ProtocolListActivity : AppCompatActivity() {
 
                 }, { error ->
                     Snackbar.make(recyclerView, "An Error occurred", 2000).show()
+                    swipeRefreshLayout.isRefreshing = false
                     Log.e("ProtocolListActivity", "error loading api data: $error")
                 })
-
-
-        //swipeRefreshLayout.isRefreshing = false
     }
 
     private fun onItemSelect(item: ViewType) {
@@ -119,18 +127,34 @@ class ProtocolListActivity : AppCompatActivity() {
                         arguments = Bundle()
                         arguments.putParcelable(ProtocolDetailFragment.PROTOCOL_ITEM, item)
                     }
-                    this.supportFragmentManager
-                            .beginTransaction()
-                            .replace(R.id.protocol_detail_container, fragment)
-                            .commit()
-                } else {
-                    val intent = Intent(this, ProtocolDetailActivity::class.java).apply {
-                        putExtra(ProtocolDetailFragment.PROTOCOL_ITEM, item)
+                    this.supportFragmentManager.withTransaction {
+                        replace(R.id.protocol_detail_container, fragment)
                     }
-                    this.startActivity(intent)
+                } else {
+                    startActivity<ProtocolDetailActivity>(ProtocolDetailFragment.PROTOCOL_ITEM to item)
                 }
             }
             else -> Snackbar.make(recyclerView, "Something else Selected", 1000).show()
         }
     }
+
+    //create options menu
+    //for some reason this doesnt work automatically
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    //handle option menu selection
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when(item?.itemId) {
+            R.id.action_refresh -> consume { refreshProtocols() }
+            R.id.action_settings -> consume {
+                //launch settings activity
+                this.supportFragmentManager.withTransaction {
+                    add(R.id.frameLayout, SettingsFragment())
+                }
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+
 }

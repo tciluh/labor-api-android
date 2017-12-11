@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_protocol_detail.*
  * item details are presented side-by-side with a list of items
  * in a [ProtocolListActivity].
  */
-class ProtocolDetailActivity : AppCompatActivity() {
+class ProtocolDetailActivity : BaseActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/preferences_api_category_title"
+        >
+        <EditTextPreference
+            android:key="api_url"
+            android:title="@string/preferences_api_ip_title"
+            android:summary="@string/preferences_api_ip_summary"
+            android:defaultValue="130.75.115.114"
+            ></EditTextPreference>
+        <EditTextPreference
+            android:key="api_port"
+            android:title="@string/preferences_api_port_title"
+            android:summary="@string/preferences_api_port_summary"
+            android:defaultValue="130.75.115.114"
+            ></EditTextPreference>
+
+    </PreferenceCategory>
+</PreferenceScreen>
