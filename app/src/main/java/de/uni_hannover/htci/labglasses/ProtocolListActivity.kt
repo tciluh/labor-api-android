@@ -25,6 +25,8 @@ import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.startActivity
 import kotlinx.android.synthetic.main.activity_protocol_list.*
 import kotlinx.android.synthetic.main.protocol_list.*
+import org.jetbrains.anko.debug
+import org.jetbrains.anko.error
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -114,13 +116,13 @@ class ProtocolListActivity : BaseActivity(){
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ list ->
                     swipeRefreshLayout.isRefreshing = false
-                    Log.d("ProtocolListActivity", "got api response: $list")
+                    debug("got api response: $list")
                     listAdapter.addProtocols(list)
 
                 }, { error ->
                     Snackbar.make(recyclerView, "An Error occurred", 2000).show()
                     swipeRefreshLayout.isRefreshing = false
-                    Log.e("ProtocolListActivity", "error loading api data: $error")
+                    error("error loading api data: $error")
                 })
     }
 
