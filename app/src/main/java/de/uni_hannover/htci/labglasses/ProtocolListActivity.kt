@@ -2,6 +2,7 @@ package de.uni_hannover.htci.labglasses
 
 import android.content.Intent
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
@@ -70,9 +71,13 @@ class ProtocolListActivity : BaseActivity(){
     private val retrofit: Retrofit by lazy {
         //we want the subscription to run on a background thread
         val rx2adapter = RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io())
+        //get api url + port
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val host = sharedPrefs.getString(API_HOST_PREFERENCE, "130.75.115.47")
+        val port = sharedPrefs.getString(API_PORT_PREFERENCE, "3000")
 
         Retrofit.Builder()
-                .baseUrl("http://192.168.1.21:3000/")
+                .baseUrl("http://$host:$port/")
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .addCallAdapterFactory(rx2adapter)
                 .build()
