@@ -16,4 +16,9 @@ open class BaseActivity : AppCompatActivity(), AnkoLogger {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
     }
 
+    companion object {
+        val API_HOST_PREFERENCE = "api_url"
+        val API_PORT_PREFERENCE = "api_port"
+    }
+
 }
