@@ -1,12 +1,14 @@
 package de.uni_hannover.htci.labglasses.protocol_pager
 
+import android.media.audiofx.Equalizer
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import de.uni_hannover.htci.labglasses.ProtocolStepFragment
 import de.uni_hannover.htci.labglasses.model.Instruction
 import de.uni_hannover.htci.labglasses.model.Protocol
+import de.uni_hannover.htci.labglasses.model.Instruction.Companion.InstructionType
 import org.jetbrains.anko.support.v4.withArguments
+import java.util.*
 
 /**
  * Created by sl33k on 1/5/18.
@@ -36,8 +38,15 @@ class ProtocolPagerAdapter(fm: FragmentManager?, private val protocol: Protocol)
     }
 
     override fun getItem(position: Int): Fragment {
-        return Fragment()//ProtocolStepFragment().withArguments(
-                //ProtocolStepFragment.INSTRUCTION_ITEM to displayedInstructions[position])
+        val instruction = displayedInstructions[position]
+        val fragment: BaseFragment
+        when(instruction.type){
+            InstructionType.Simple -> fragment = SimpleFragment()
+            InstructionType.Invalid -> error("got invalid fragment")
+            InstructionType.Timer -> fragment = TimerFragment()
+            InstructionType.Equation -> fragment = EquationFragment()
+        }
+        return fragment.withArguments(BaseFragment.INSTRUCTION_ITEM to instruction)
     }
     override fun getCount(): Int = displayedInstructions.size
 
@@ -49,4 +58,6 @@ class ProtocolPagerAdapter(fm: FragmentManager?, private val protocol: Protocol)
         displayedInstructions.add(instruction)
         notifyDataSetChanged()
     }
+
+
 }
