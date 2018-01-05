@@ -27,6 +27,10 @@ data class Protocol(val id: Int, val name: String, val description: String, val 
     @Transient
     override val viewType = AdapterType.PROTOCOL
 
+    val firstInstruction: Instruction get() = this.instructions.first { it.isFirst }
+
+    fun instructionById(id: Int): Instruction? = this.instructions.firstOrNull { it.id == id }
+
     override fun hashCode(): Int = this.id
 
 }
