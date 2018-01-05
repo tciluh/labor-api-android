@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.uni_hannover.htci.labglasses">
+    package="de.uni_hannover.htci.labglasses"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -31,5 +33,7 @@
                 android:value="de.uni_hannover.htci.labglasses.ProtocolListActivity" />
         </activity>
     </application>
+
+    <uses-sdk tools:overrideLibrary="com.nishant.math"/>
 
 </manifest>

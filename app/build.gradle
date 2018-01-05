@@ -46,6 +46,9 @@ dependencies {
     //custom dependencies
     /////////////////////
 
+    //math rendering
+    compile 'com.github.Nishant-Pathak:MathView:v1.1'
+
     //anko kotlin helpers
     compile "org.jetbrains.anko:anko:$anko_version"
     //rxjava + android extensions
