@@ -1,11 +1,14 @@
 package de.uni_hannover.htci.labglasses
 
 import android.content.Intent
+import android.net.wifi.WifiConfiguration
 import android.os.Bundle
 import android.support.v4.app.NavUtils
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import de.uni_hannover.htci.labglasses.utils.withTransaction
 import kotlinx.android.synthetic.main.activity_protocol_detail.*
+import org.jetbrains.anko.support.v4.withArguments
 
 /**
  * An activity representing a single Protocol detail screen. This
@@ -35,14 +38,13 @@ class ProtocolDetailActivity : BaseActivity(){
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            val arguments = Bundle()
-            arguments.putParcelable(ProtocolDetailFragment.PROTOCOL_ITEM,
-                    intent.getParcelableExtra(ProtocolDetailFragment.PROTOCOL_ITEM))
-            val fragment = ProtocolDetailFragment()
-            fragment.arguments = arguments
-            supportFragmentManager.beginTransaction()
-                    .add(R.id.protocol_detail_container, fragment)
-                    .commit()
+            val fragment = ProtocolDetailFragment().withArguments(
+                    ProtocolDetailFragment.PROTOCOL_ITEM to
+                            intent.getParcelableExtra(ProtocolDetailFragment.PROTOCOL_ITEM)
+            )
+            supportFragmentManager.withTransaction {
+               add(R.id.protocol_detail_container, fragment)
+            }
         }
     }
 
