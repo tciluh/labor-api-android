@@ -2,21 +2,14 @@ package de.uni_hannover.htci.labglasses
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import de.uni_hannover.htci.labglasses.ProtocolStepFragment.Companion.INSTRUCTION_ITEM
-import de.uni_hannover.htci.labglasses.model.Instruction
 import de.uni_hannover.htci.labglasses.model.Protocol
+import de.uni_hannover.htci.labglasses.protocol_pager.ProtocolPagerAdapter
 import kotlinx.android.synthetic.main.activity_protocol_detail.*
 import kotlinx.android.synthetic.main.protocol_detail.*
-import kotlinx.android.synthetic.main.protocol_step_page.*
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.bundleOf
 
 /**
  * A fragment representing a single Protocol detail screen.
@@ -56,40 +49,3 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger {
     }
 }
 
-class ProtocolPagerAdapter(fm: FragmentManager?, private val protocol: Protocol) : FragmentPagerAdapter(fm) {
-    override fun getItem(position: Int): Fragment {
-        val f = ProtocolStepFragment()
-        val b = bundleOf("num" to position, INSTRUCTION_ITEM to protocol.instructions[position])
-        f.arguments = b
-        return f
-    }
-    override fun getCount(): Int {
-        return protocol.instructions.size
-    }
-
-    override fun getPageTitle(position: Int): CharSequence {
-        return protocol.instructions[position].id.toString()
-    }
-}
-
-class ProtocolStepFragment: Fragment() {
-    private val num: Int by lazy {
-        arguments.getInt("num")
-    }
-    private val instruction: Instruction by lazy {
-        arguments.getParcelable<Instruction>(INSTRUCTION_ITEM)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-            = inflater.inflate(R.layout.protocol_step_page, container, false)
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        textView.text = "Fragment # " + num.toString() + "\n" + "Instruction Description:\n" + instruction.description
-    }
-
-    companion object {
-        const val INSTRUCTION_ITEM = "protocol_step_instruction"
-    }
-
-}
