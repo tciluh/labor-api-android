@@ -1,6 +1,7 @@
 package de.uni_hannover.htci.labglasses.protocol_pager
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +15,10 @@ import kotlinx.android.synthetic.main.simple_instruction.*
 /**
  * Created by sl33k on 1/5/18.
  */
-class SimpleFragment: BaseFragment() {
+class SimpleFragment: Fragment() {
     lateinit var host: String
     lateinit var port: String
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         //get api url + port
@@ -27,7 +29,6 @@ class SimpleFragment: BaseFragment() {
     }
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        descriptionTextView.text = instruction.description
         Picasso.with(context)
                 .load("http://$host:$port/image/${instruction.imageId}")
                 .fit()

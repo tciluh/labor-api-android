@@ -39,14 +39,7 @@ class ProtocolPagerAdapter(fm: FragmentManager?, private val protocol: Protocol)
 
     override fun getItem(position: Int): Fragment {
         val instruction = displayedInstructions[position]
-        val fragment: BaseFragment
-        when(instruction.type){
-            InstructionType.Simple -> fragment = SimpleFragment()
-            InstructionType.Invalid -> error("got invalid fragment")
-            InstructionType.Timer -> fragment = TimerFragment()
-            InstructionType.Equation -> fragment = EquationFragment()
-        }
-        return fragment.withArguments(BaseFragment.INSTRUCTION_ITEM to instruction)
+        return BaseFragment().withArguments(INSTRUCTION_ITEM to instruction)
     }
     override fun getCount(): Int = displayedInstructions.size
 
