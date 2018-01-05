@@ -47,6 +47,8 @@ class ProtocolPagerAdapter(fm: FragmentManager?, private val protocol: Protocol)
 
     val currentInstruction: Instruction get() = displayedInstructions.last()
 
+    fun instructionAtIndex(index: Int): Instruction? = displayedInstructions.getOrNull(index)
+
     fun add(instruction: Instruction) {
         displayedInstructions.add(instruction)
         notifyDataSetChanged()
