@@ -22,14 +22,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Chronometer
-            android:id="@+id/timerChronometer"
+        <TextView
+            android:id="@+id/timerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:format="Time Left: %s"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:layout_centerInParent="true"
-            />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            tools:text="Timer: 00:00 " />
+
 
     </RelativeLayout>
 
