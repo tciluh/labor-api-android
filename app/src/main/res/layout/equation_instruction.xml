@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusable="false"
+    android:clickable="false"
+    android:descendantFocusability="blocksDescendants">
 
     <com.nishant.math.MathView
         android:id="@+id/mathView"
@@ -16,6 +19,6 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></com.nishant.math.MathView>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.widget.FrameLayout>
