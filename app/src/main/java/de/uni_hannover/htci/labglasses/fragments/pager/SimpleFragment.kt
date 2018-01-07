@@ -1,4 +1,4 @@
-package de.uni_hannover.htci.labglasses.protocol_pager
+package de.uni_hannover.htci.labglasses.fragments.pager
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
-import de.uni_hannover.htci.labglasses.BaseActivity.Companion.API_HOST_PREFERENCE
-import de.uni_hannover.htci.labglasses.BaseActivity.Companion.API_PORT_PREFERENCE
+import de.uni_hannover.htci.labglasses.activity.BaseActivity.Companion.API_HOST_PREFERENCE
+import de.uni_hannover.htci.labglasses.activity.BaseActivity.Companion.API_PORT_PREFERENCE
 import de.uni_hannover.htci.labglasses.R
 import kotlinx.android.synthetic.main.simple_instruction.*
 
@@ -29,9 +29,12 @@ class SimpleFragment: Fragment() {
     }
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Picasso.with(context)
-                .load("http://$host:$port/image/${instruction.imageId}")
-                .fit()
-                .into(imageView)
+        val imageId: Int? = instruction?.imageId ?: result?.imageId
+        imageId?.let {
+            Picasso.with(context)
+                    .load("http://$host:$port/image/$it")
+                    .fit()
+                    .into(imageView)
+        }
     }
 }

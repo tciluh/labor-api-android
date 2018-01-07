@@ -1,18 +1,16 @@
-package de.uni_hannover.htci.labglasses
+package de.uni_hannover.htci.labglasses.activity
 
 import android.content.Intent
-import android.net.wifi.WifiConfiguration
 import android.os.Bundle
 import android.support.v4.app.NavUtils
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import de.uni_hannover.htci.labglasses.R
+import de.uni_hannover.htci.labglasses.fragments.ProtocolDetailFragment
 import de.uni_hannover.htci.labglasses.utils.consume
 import de.uni_hannover.htci.labglasses.utils.withTransaction
 import kotlinx.android.synthetic.main.activity_protocol_detail.*
-import org.jetbrains.anko.debug
 import org.jetbrains.anko.support.v4.withArguments
-import org.jetbrains.anko.toolbar
 
 /**
  * An activity representing a single Protocol detail screen. This

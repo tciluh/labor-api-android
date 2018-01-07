@@ -1,9 +1,10 @@
-package de.uni_hannover.htci.labglasses
+package de.uni_hannover.htci.labglasses.activity
 
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
+import de.uni_hannover.htci.labglasses.R
 import org.jetbrains.anko.AnkoLogger
 
 /**

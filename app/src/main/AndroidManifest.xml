@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ProtocolListActivity"
+            android:name=".activity.ProtocolListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -24,13 +24,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ProtocolDetailActivity"
+            android:name=".activity.ProtocolDetailActivity"
             android:label="@string/title_protocol_detail"
-            android:parentActivityName=".ProtocolListActivity"
+            android:parentActivityName=".activity.ProtocolListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.uni_hannover.htci.labglasses.ProtocolListActivity" />
+                android:value="de.uni_hannover.htci.labglasses.activity.ProtocolListActivity" />
         </activity>
     </application>
 

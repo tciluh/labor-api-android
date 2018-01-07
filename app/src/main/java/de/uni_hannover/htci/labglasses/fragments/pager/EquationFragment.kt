@@ -1,4 +1,4 @@
-package de.uni_hannover.htci.labglasses.protocol_pager
+package de.uni_hannover.htci.labglasses.fragments.pager
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -19,6 +19,6 @@ class EquationFragment: Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mathView.text = "`${instruction.equation}`"
+        mathView.text = "`${instruction?.equation}`"
     }
 }

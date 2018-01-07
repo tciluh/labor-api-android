@@ -1,19 +1,19 @@
-package de.uni_hannover.htci.labglasses.protocol_pager
+package de.uni_hannover.htci.labglasses.adapter
 
-import android.media.audiofx.Equalizer
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
+import de.uni_hannover.htci.labglasses.fragments.pager.BaseFragment
+import de.uni_hannover.htci.labglasses.fragments.pager.INSTRUCTION_ITEM
 import de.uni_hannover.htci.labglasses.model.Instruction
 import de.uni_hannover.htci.labglasses.model.Protocol
-import de.uni_hannover.htci.labglasses.model.Instruction.Companion.InstructionType
 import org.jetbrains.anko.support.v4.withArguments
 import java.util.*
 
 /**
  * Created by sl33k on 1/5/18.
  */
-class ProtocolPagerAdapter(fm: FragmentManager?, private val protocol: Protocol) : FragmentStatePagerAdapter(fm) {
+class InstructionPagerAdapter(fm: FragmentManager?, private val protocol: Protocol) : FragmentStatePagerAdapter(fm) {
     private var displayedInstructions: ArrayList<Instruction> = arrayListOf(protocol.firstInstruction)
     init {
         //add all non branching instructions after the first instruction to be viewable

@@ -1,6 +1,5 @@
-package de.uni_hannover.htci.labglasses.protocol_pager
+package de.uni_hannover.htci.labglasses.fragments.pager
 
-import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.support.v4.app.Fragment
@@ -25,7 +24,7 @@ class TimerFragment: Fragment() {
         userVisibleHint = false
     }
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val durationString = instruction.timerDuration
+        val durationString = instruction?.timerDuration
         if(durationString != null) {
             try{
                 val converted = durationString.toLong()
@@ -33,7 +32,7 @@ class TimerFragment: Fragment() {
                 countdown = buildCountdownTimer(converted)
             }
             catch (e: NumberFormatException) {
-                error("not a valid time in timer duration: ${instruction.timerDuration}")
+                error("not a valid time in timer duration: ${durationString}")
             }
         }
         else{

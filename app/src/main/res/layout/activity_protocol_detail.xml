@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="de.uni_hannover.htci.labglasses.ProtocolDetailActivity"
+    tools:context="de.uni_hannover.htci.labglasses.activity.ProtocolDetailActivity"
     tools:ignore="MergeRootFrame">
 
     <android.support.design.widget.AppBarLayout

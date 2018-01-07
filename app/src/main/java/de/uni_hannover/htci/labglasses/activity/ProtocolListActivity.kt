@@ -1,4 +1,4 @@
-package de.uni_hannover.htci.labglasses
+package de.uni_hannover.htci.labglasses.activity
 
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -10,9 +10,12 @@ import android.view.MenuItem
 import com.serjltt.moshi.adapters.Wrapped
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
+import de.uni_hannover.htci.labglasses.R
 import de.uni_hannover.htci.labglasses.adapter.ProtocolListAdapter
 import de.uni_hannover.htci.labglasses.adapter.ViewType
 import de.uni_hannover.htci.labglasses.api.LaborApi
+import de.uni_hannover.htci.labglasses.fragments.ProtocolDetailFragment
+import de.uni_hannover.htci.labglasses.fragments.SettingsFragment
 import de.uni_hannover.htci.labglasses.model.Protocol
 import de.uni_hannover.htci.labglasses.utils.consume
 import de.uni_hannover.htci.labglasses.utils.withTransaction
