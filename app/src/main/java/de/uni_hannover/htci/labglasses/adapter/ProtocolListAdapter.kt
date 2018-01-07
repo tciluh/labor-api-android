@@ -34,10 +34,6 @@ class ProtocolListAdapter(onSelectHandler: (ViewType) -> Unit) : RecyclerView.Ad
     }
 
     fun addProtocols(protocols: List<Protocol>) {
-        //remove loading
-        //val index = items.indexOf(loadingItem)
-        //items.removeAt(index)
-        //notifyItemRemoved(index)
         //add items
         val initialSize = items.size
         if (items.addAll(protocols)) {
@@ -45,6 +41,12 @@ class ProtocolListAdapter(onSelectHandler: (ViewType) -> Unit) : RecyclerView.Ad
         } else {
             throw IllegalStateException("can't insert protocols into items")
         }
+    }
+
+    fun setProtocols(protocols: List<Protocol>){
+        items.clear()
+        items.addAll(protocols)
+        notifyDataSetChanged()
     }
 
 

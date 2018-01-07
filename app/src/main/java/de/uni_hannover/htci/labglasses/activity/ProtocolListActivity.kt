@@ -103,6 +103,10 @@ class ProtocolListActivity : BaseActivity(){
             twoPaned = true
         }
 
+        swipeRefreshLayout.setOnRefreshListener {
+            refreshProtocols()
+        }
+
         //load protocols
         refreshProtocols()
     }
@@ -116,7 +120,7 @@ class ProtocolListActivity : BaseActivity(){
                 .subscribe({ list ->
                     swipeRefreshLayout.isRefreshing = false
                     debug("got api response: $list")
-                    listAdapter.addProtocols(list)
+                    listAdapter.setProtocols(list)
 
                 }, { error ->
                     Snackbar.make(recyclerView, "An Error occurred", 2000).show()
