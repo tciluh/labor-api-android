@@ -3,9 +3,19 @@
     <string name="title_protocol_detail">Protocol Detail</string>
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_next">Next</string>
+    <string name="action_previous">Previous</string>
     <string name="preferences_api_ip_title">IP/Hostname</string>
     <string name="preferences_api_ip_summary">IP-Address/Hostname on which the labor-api listens</string>
     <string name="preferences_api_port_title">Port</string>
     <string name="preferences_api_port_summary">Port on which the labor-api listens</string>
     <string name="preferences_api_category_title">API</string>
+    <string name="timer_reset_button">Reset</string>
+    <string name="timer_start_button">Start</string>
+    <string name="instruction_image">Instruction Image</string>
+    <string name="countdown_timer">Timer: %1$s</string>
+    <string name="protocol_pager_step_x">Step %1$d</string>
+    <string name="result_dialog_title">Select which result applies</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_okay">Okay</string>
 </resources>

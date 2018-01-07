@@ -46,6 +46,12 @@ dependencies {
     //custom dependencies
     /////////////////////
 
+    //image download/showing
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    //math rendering
+    compile 'com.github.Nishant-Pathak:MathView:v1.1'
+
     //anko kotlin helpers
     compile "org.jetbrains.anko:anko:$anko_version"
     //rxjava + android extensions

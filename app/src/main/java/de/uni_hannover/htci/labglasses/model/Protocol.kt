@@ -13,6 +13,9 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @SuppressLint("ParcelCreator")
 data class Protocol(val id: Int, val name: String, val description: String, val instructions: Array<Instruction>) : Parcelable, ViewType {
+    init {
+        instructions.sortBy { it.id }
+    }
     override fun equals(other: Any?): Boolean{
         return when (other) {
             this -> return true
@@ -24,5 +27,10 @@ data class Protocol(val id: Int, val name: String, val description: String, val 
     @Transient
     override val viewType = AdapterType.PROTOCOL
 
+    val firstInstruction: Instruction get() = this.instructions.first { it.isFirst }
+
+    fun instructionById(id: Int): Instruction? = this.instructions.firstOrNull { it.id == id }
+
     override fun hashCode(): Int = this.id
+
 }

@@ -13,7 +13,7 @@
             android:key="api_port"
             android:title="@string/preferences_api_port_title"
             android:summary="@string/preferences_api_port_summary"
-            android:defaultValue="130.75.115.114"
+            android:defaultValue="3000"
             ></EditTextPreference>
 
     </PreferenceCategory>

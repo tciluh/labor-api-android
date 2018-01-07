@@ -1,21 +1,21 @@
-package de.uni_hannover.htci.labglasses
+package de.uni_hannover.htci.labglasses.activity
 
-import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
+import android.preference.PreferenceManager
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.serjltt.moshi.adapters.Wrapped
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
+import de.uni_hannover.htci.labglasses.R
 import de.uni_hannover.htci.labglasses.adapter.ProtocolListAdapter
 import de.uni_hannover.htci.labglasses.adapter.ViewType
 import de.uni_hannover.htci.labglasses.api.LaborApi
+import de.uni_hannover.htci.labglasses.fragments.ProtocolDetailFragment
+import de.uni_hannover.htci.labglasses.fragments.SettingsFragment
 import de.uni_hannover.htci.labglasses.model.Protocol
 import de.uni_hannover.htci.labglasses.utils.consume
 import de.uni_hannover.htci.labglasses.utils.withTransaction
@@ -24,6 +24,8 @@ import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.startActivity
 import kotlinx.android.synthetic.main.activity_protocol_list.*
 import kotlinx.android.synthetic.main.protocol_list.*
+import org.jetbrains.anko.debug
+import org.jetbrains.anko.error
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -70,9 +72,13 @@ class ProtocolListActivity : BaseActivity(){
     private val retrofit: Retrofit by lazy {
         //we want the subscription to run on a background thread
         val rx2adapter = RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io())
+        //get api url + port
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val host = sharedPrefs.getString(API_HOST_PREFERENCE, "130.75.115.47")
+        val port = sharedPrefs.getString(API_PORT_PREFERENCE, "3000")
 
         Retrofit.Builder()
-                .baseUrl("http://192.168.1.21:3000/")
+                .baseUrl("http://$host:$port/")
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .addCallAdapterFactory(rx2adapter)
                 .build()
@@ -109,13 +115,13 @@ class ProtocolListActivity : BaseActivity(){
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ list ->
                     swipeRefreshLayout.isRefreshing = false
-                    Log.d("ProtocolListActivity", "got api response: $list")
+                    debug("got api response: $list")
                     listAdapter.addProtocols(list)
 
                 }, { error ->
                     Snackbar.make(recyclerView, "An Error occurred", 2000).show()
                     swipeRefreshLayout.isRefreshing = false
-                    Log.e("ProtocolListActivity", "error loading api data: $error")
+                    error("error loading api data: $error")
                 })
     }
 

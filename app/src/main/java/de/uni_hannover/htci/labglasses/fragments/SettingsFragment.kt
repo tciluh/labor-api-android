@@ -1,7 +1,8 @@
-package de.uni_hannover.htci.labglasses
+package de.uni_hannover.htci.labglasses.fragments
 
 import android.os.Bundle
 import android.support.v7.preference.PreferenceFragmentCompat
+import de.uni_hannover.htci.labglasses.R
 import org.jetbrains.anko.AnkoLogger
 
 /**

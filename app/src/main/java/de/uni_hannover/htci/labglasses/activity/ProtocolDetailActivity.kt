@@ -1,11 +1,16 @@
-package de.uni_hannover.htci.labglasses
+package de.uni_hannover.htci.labglasses.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.NavUtils
-import android.support.v7.app.AppCompatActivity
+import android.view.Menu
 import android.view.MenuItem
+import de.uni_hannover.htci.labglasses.R
+import de.uni_hannover.htci.labglasses.fragments.ProtocolDetailFragment
+import de.uni_hannover.htci.labglasses.utils.consume
+import de.uni_hannover.htci.labglasses.utils.withTransaction
 import kotlinx.android.synthetic.main.activity_protocol_detail.*
+import org.jetbrains.anko.support.v4.withArguments
 
 /**
  * An activity representing a single Protocol detail screen. This
@@ -14,6 +19,13 @@ import kotlinx.android.synthetic.main.activity_protocol_detail.*
  * in a [ProtocolListActivity].
  */
 class ProtocolDetailActivity : BaseActivity(){
+
+    interface PagingToolbarDelegate {
+        fun onNextPage()
+        fun onPreviousPage()
+    }
+
+    var toolbarDelegate: PagingToolbarDelegate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,14 +47,17 @@ class ProtocolDetailActivity : BaseActivity(){
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            val arguments = Bundle()
-            arguments.putParcelable(ProtocolDetailFragment.PROTOCOL_ITEM,
-                    intent.getParcelableExtra(ProtocolDetailFragment.PROTOCOL_ITEM))
-            val fragment = ProtocolDetailFragment()
-            fragment.arguments = arguments
-            supportFragmentManager.beginTransaction()
-                    .add(R.id.protocol_detail_container, fragment)
-                    .commit()
+            val fragment = ProtocolDetailFragment().withArguments(
+                    ProtocolDetailFragment.PROTOCOL_ITEM to
+                            intent.getParcelableExtra(ProtocolDetailFragment.PROTOCOL_ITEM)
+            )
+            toolbarDelegate = fragment
+            supportFragmentManager.withTransaction {
+               add(R.id.protocol_detail_container, fragment)
+            }
+        }
+        else{
+            toolbarDelegate = supportFragmentManager.findFragmentById(R.id.protocol_detail_container) as? PagingToolbarDelegate
         }
     }
 
@@ -59,6 +74,17 @@ class ProtocolDetailActivity : BaseActivity(){
                     NavUtils.navigateUpTo(this, Intent(this, ProtocolListActivity::class.java))
                     true
                 }
+                R.id.action_previous -> consume {
+                   toolbarDelegate?.onPreviousPage()
+                }
+                R.id.action_next -> consume {
+                    toolbarDelegate?.onNextPage()
+                }
                 else -> super.onOptionsItemSelected(item)
             }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.detail_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
 }
