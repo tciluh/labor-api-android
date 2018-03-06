@@ -9,7 +9,7 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 @SuppressLint("ParcelCreator")
-data class Instruction(val id: Int, val isFirst: Boolean, val description: String, val imageId: Int? = null, val equation: String? = null, val timerDuration: String? = null, val results: Array<Result>) : Parcelable {
+data class Instruction(val id: Int, val isFirst: Boolean, val description: String, val imageId: Int? = null, val equation: String? = null, val timerDuration: String? = null, val results: Array<Result>, val actions: Array<Action>) : Parcelable {
     init {
         results.sortBy { it.id }
     }
