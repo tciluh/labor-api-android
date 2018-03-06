@@ -9,7 +9,7 @@ import retrofit2.http.Path
 /**
  * Created by sl33k on 11/12/17.
  */
-interface LaborApi {
+interface ILaborApi {
     @GET("protocol/")
     @Wrapped(path = arrayOf("payload"))
     fun getProtocols(): Single<List<Protocol>>

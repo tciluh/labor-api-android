@@ -13,10 +13,10 @@ import com.squareup.moshi.Moshi
 import de.uni_hannover.htci.labglasses.R
 import de.uni_hannover.htci.labglasses.adapter.ProtocolListAdapter
 import de.uni_hannover.htci.labglasses.adapter.ViewType
-import de.uni_hannover.htci.labglasses.api.LaborApi
 import de.uni_hannover.htci.labglasses.fragments.ProtocolDetailFragment
 import de.uni_hannover.htci.labglasses.fragments.SettingsFragment
 import de.uni_hannover.htci.labglasses.model.Protocol
+import de.uni_hannover.htci.labglasses.singletons.ApiManager
 import de.uni_hannover.htci.labglasses.utils.consume
 import de.uni_hannover.htci.labglasses.utils.withTransaction
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -62,32 +62,6 @@ class ProtocolListActivity : BaseActivity(){
         recyclerView.adapter as ProtocolListAdapter
     }
 
-    private val moshi: Moshi by lazy {
-        Moshi.Builder()
-                .add(Wrapped.ADAPTER_FACTORY)
-                .add(KotlinJsonAdapterFactory())
-                .build()
-    }
-
-    private val retrofit: Retrofit by lazy {
-        //we want the subscription to run on a background thread
-        val rx2adapter = RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io())
-        //get api url + port
-        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val host = sharedPrefs.getString(API_HOST_PREFERENCE, "130.75.115.47")
-        val port = sharedPrefs.getString(API_PORT_PREFERENCE, "3000")
-
-        Retrofit.Builder()
-                .baseUrl("http://$host:$port/")
-                .addConverterFactory(MoshiConverterFactory.create(moshi))
-                .addCallAdapterFactory(rx2adapter)
-                .build()
-    }
-
-    private val protocolApi: LaborApi  by lazy {
-        retrofit.create(LaborApi::class.java)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_protocol_list)
@@ -115,7 +89,7 @@ class ProtocolListActivity : BaseActivity(){
         swipeRefreshLayout.isRefreshing = true
 
         //subscribe to the api to get all protocols
-        protocolApi.getProtocols()
+        ApiManager.getInstance(this).api.getProtocols()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ list ->
                     swipeRefreshLayout.isRefreshing = false
