@@ -8,6 +8,5 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
-    app:layoutManager="LinearLayoutManager"
     tools:context="de.uni_hannover.htci.labglasses.activity.ProtocolListActivity"
     tools:listitem="@layout/protocol_list_content" />

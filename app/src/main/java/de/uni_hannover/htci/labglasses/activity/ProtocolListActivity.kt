@@ -5,6 +5,8 @@ import android.preference.PreferenceManager
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
+import android.support.v7.widget.LinearLayoutCompat
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import com.serjltt.moshi.adapters.Wrapped
@@ -55,6 +57,8 @@ class ProtocolListActivity : BaseActivity(){
     private val listAdapter: ProtocolListAdapter by lazy {
         //create adapter
         recyclerView.adapter = ProtocolListAdapter(this::onItemSelect)
+        //set a layout manager
+        recyclerView.layoutManager = LinearLayoutManager(this)
         //setup cell divider
         val dividerItemDecoration = DividerItemDecoration(recyclerView.context, VERTICAL)
         recyclerView.addItemDecoration(dividerItemDecoration)
