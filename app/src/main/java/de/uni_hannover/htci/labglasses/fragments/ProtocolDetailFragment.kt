@@ -3,6 +3,7 @@ package de.uni_hannover.htci.labglasses.fragments
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
+import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.view.ViewPager
 import android.support.v4.view.ViewPager.SCROLL_STATE_SETTLING
 import android.view.LayoutInflater
@@ -12,6 +13,8 @@ import de.uni_hannover.htci.labglasses.activity.ProtocolDetailActivity
 import de.uni_hannover.htci.labglasses.R
 import de.uni_hannover.htci.labglasses.model.Protocol
 import de.uni_hannover.htci.labglasses.adapter.InstructionPagerAdapter
+import de.uni_hannover.htci.labglasses.model.Action
+import de.uni_hannover.htci.labglasses.model.Instruction
 import de.uni_hannover.htci.labglasses.model.Result
 import kotlinx.android.synthetic.main.protocol_detail.*
 import org.jetbrains.anko.AnkoLogger
@@ -30,6 +33,8 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger, ViewPager.OnPageChangeLis
         arguments.getParcelable<Protocol>(PROTOCOL_ITEM)
     }
     private var adapter: InstructionPagerAdapter? = null
+
+    private val currentInstruction: Instruction? get() = adapter?.instructionAtIndex(protocol_pager.currentItem)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View?
@@ -120,6 +125,17 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger, ViewPager.OnPageChangeLis
             adapter?.add(it)
             protocol_pager.currentItem++
         }
+    }
+
+    override fun onMeasurements() {
+        val actions: Array<Action> = currentInstruction?.actions ?: error("error parsing actions from api")
+
+        if(actions.isEmpty()) {
+            toast("No Measurements defined for this step!").show()
+        }
+        ActionsDialogFragment()
+                .withArguments( ActionsDialogFragment.DIALOG_ACTIONS_ITEM to actions)
+                .show(fragmentManager, "actions-dialog")
     }
 
     companion object {
