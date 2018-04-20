@@ -23,6 +23,7 @@ class ProtocolDetailActivity : BaseActivity(){
     interface PagingToolbarDelegate {
         fun onNextPage()
         fun onPreviousPage()
+        fun onMeasurements()
     }
 
     var toolbarDelegate: PagingToolbarDelegate? = null
@@ -79,6 +80,9 @@ class ProtocolDetailActivity : BaseActivity(){
                 }
                 R.id.action_next -> consume {
                     toolbarDelegate?.onNextPage()
+                }
+                R.id.action_measurements -> consume {
+                    toolbarDelegate?.onMeasurements()
                 }
                 else -> super.onOptionsItemSelected(item)
             }

@@ -16,6 +16,7 @@
     <string name="countdown_timer">Timer: %1$s</string>
     <string name="protocol_pager_step_x">Step %1$d</string>
     <string name="result_dialog_title">Select which result applies</string>
+    <string name="action_dialog_title">Actions</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_okay">Okay</string>
 </resources>
