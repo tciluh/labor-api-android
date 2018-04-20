@@ -1,17 +1,12 @@
 package de.uni_hannover.htci.labglasses.activity
 
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
-import android.support.v7.widget.LinearLayoutCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
-import com.serjltt.moshi.adapters.Wrapped
-import com.squareup.moshi.KotlinJsonAdapterFactory
-import com.squareup.moshi.Moshi
 import de.uni_hannover.htci.labglasses.R
 import de.uni_hannover.htci.labglasses.adapter.ProtocolListAdapter
 import de.uni_hannover.htci.labglasses.adapter.ViewType
@@ -22,15 +17,11 @@ import de.uni_hannover.htci.labglasses.singletons.ApiManager
 import de.uni_hannover.htci.labglasses.utils.consume
 import de.uni_hannover.htci.labglasses.utils.withTransaction
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.startActivity
 import kotlinx.android.synthetic.main.activity_protocol_list.*
 import kotlinx.android.synthetic.main.protocol_list.*
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.error
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.moshi.MoshiConverterFactory
 
 
 /**
