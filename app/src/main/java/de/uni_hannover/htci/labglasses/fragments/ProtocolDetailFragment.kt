@@ -16,8 +16,10 @@ import de.uni_hannover.htci.labglasses.adapter.InstructionPagerAdapter
 import de.uni_hannover.htci.labglasses.model.Action
 import de.uni_hannover.htci.labglasses.model.Instruction
 import de.uni_hannover.htci.labglasses.model.Result
+
 import kotlinx.android.synthetic.main.protocol_detail.*
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.debug
 import org.jetbrains.anko.support.v4.toast
 import org.jetbrains.anko.support.v4.withArguments
 
@@ -27,7 +29,11 @@ import org.jetbrains.anko.support.v4.withArguments
  * in two-pane mode (on tablets) or a [ProtocolDetailActivity]
  * on handsets.
  */
-class ProtocolDetailFragment : Fragment(), AnkoLogger, ViewPager.OnPageChangeListener, ProtocolDetailActivity.PagingToolbarDelegate, ResultDialogFragment.ResultSelectionDelegate {
+class ProtocolDetailFragment : Fragment(), AnkoLogger,
+        ViewPager.OnPageChangeListener,
+        ProtocolDetailActivity.PagingToolbarDelegate,
+        ResultDialogFragment.ResultSelectionDelegate,
+        ActionsDialogFragment.MeasurementResultDelegate {
 
     private val protocol: Protocol by lazy {
         arguments.getParcelable<Protocol>(PROTOCOL_ITEM)
@@ -36,13 +42,15 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger, ViewPager.OnPageChangeLis
 
     private val currentInstruction: Instruction? get() = adapter?.instructionAtIndex(protocol_pager.currentItem)
 
+    private val completedMeasurements: MutableMap<String, Double> = mutableMapOf()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View?
             = inflater.inflate(R.layout.protocol_detail, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        adapter = InstructionPagerAdapter(childFragmentManager, protocol)
+        adapter = InstructionPagerAdapter(childFragmentManager, protocol, completedMeasurements.toMap())
         protocol_pager.adapter = adapter
         protocol_pager.addOnPageChangeListener(this)
         activity.title = protocol.name
@@ -135,7 +143,28 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger, ViewPager.OnPageChangeLis
         }
         ActionsDialogFragment()
                 .withArguments( ActionsDialogFragment.DIALOG_ACTIONS_ITEM to actions)
+                .also { it.measurementDelegate = this }
                 .show(fragmentManager, "actions-dialog")
+    }
+
+    override fun onMeasurementCompleted(action: Action, result: Any) {
+        if(action.equationIdentifier != null) {
+            val doubleVal: Double? = when(result) {
+                is Double -> result
+                is String -> result.toDoubleOrNull()
+                else -> result.toString().toDoubleOrNull()
+            }
+            if(doubleVal != null) {
+                completedMeasurements[action.equationIdentifier] = doubleVal
+                (protocol_pager.adapter as InstructionPagerAdapter).setMeasurements(completedMeasurements.toMap())
+            }
+            else {
+                debug("couldnt add: $result to measurementMap as it is not a double")
+            }
+        }
+        else {
+            debug("got result: $result for action: $action, but no equation identifier was set.")
+        }
     }
 
     companion object {
