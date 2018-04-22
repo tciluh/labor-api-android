@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.timer_instruction.*
 
 /**
  * Created by sl33k on 1/5/18.
+ * this fragment displays a countdown that can be started/stopped and reset by the user.
  */
 
 class TimerFragment: Fragment() {
