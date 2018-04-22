@@ -15,7 +15,7 @@ import org.jetbrains.anko.support.v4.withArguments
 /**
  * Created by sl33k on 1/5/18.
  */
-open class BaseFragment: Fragment(), AnkoLogger {
+open class PageContainerFragment: Fragment(), AnkoLogger {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if(savedInstanceState == null) {
@@ -30,9 +30,14 @@ open class BaseFragment: Fragment(), AnkoLogger {
                 add(R.id.contentContainer,
                         fragment.withArguments(
                                 INSTRUCTION_ITEM to instruction,
-                                RESULT_ITEM to result
+                                RESULT_ITEM to result,
+                                MEASUREMENTS_ITEM to measurements
                         ))
             }
+        }
+        else {
+            val fragment = this.childFragmentManager.findFragmentById(R.id.contentContainer)
+            val args = this.arguments
         }
         return inflater?.inflate(R.layout.base_instruction, container, false)
     }
