@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @SuppressLint("ParcelCreator")
-data class Action(val id: Int, val identifier: String, val action: String, val arguments: Map<String, String>) : Parcelable {
+data class Action(val id: Int, val identifier: String, val action: String, val arguments: Map<String, String>, val equationIdentifier: String?) : Parcelable {
     override fun equals(other: Any?): Boolean
        = when(other) {
         this -> true
