@@ -49,6 +49,9 @@ dependencies {
     //image download/showing
     compile 'com.squareup.picasso:picasso:2.5.2'
 
+    //math evaluation
+    compile 'org.mariuszgromada.math:MathParser.org-mXparser:4.1.1'
+
     //math rendering
     compile 'com.github.Nishant-Pathak:MathView:v1.1'
 

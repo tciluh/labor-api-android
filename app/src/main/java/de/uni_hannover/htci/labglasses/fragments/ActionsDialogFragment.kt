@@ -25,6 +25,10 @@ import org.jetbrains.anko.support.v4.longToast
  */
 
 class ActionsDialogFragment: DialogFragment(), AnkoLogger, ActionListAdapter.ActionDelegate {
+    interface MeasurementResultDelegate {
+        fun onMeasurementCompleted(action: Action, result: Any)
+    }
+    var measurementDelegate: MeasurementResultDelegate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +53,7 @@ class ActionsDialogFragment: DialogFragment(), AnkoLogger, ActionListAdapter.Act
         SocketManager.getInstance(this.activity).sendAction(action, {
             res ->
             activity.runOnUiThread {
+                measurementDelegate?.onMeasurementCompleted(action, res)
                 cb(res)
             }
         }, {

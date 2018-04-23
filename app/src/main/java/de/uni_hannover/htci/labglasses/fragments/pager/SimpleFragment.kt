@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.simple_instruction.*
 
 /**
  * Created by sl33k on 1/5/18.
+ * The Fragment that display a simple instruction or result with a picture
  */
 class SimpleFragment: Fragment() {
     lateinit var host: String
