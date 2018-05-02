@@ -37,7 +37,7 @@ open class PageContainerFragment: Fragment(), AnkoLogger {
         }
         else {
             val fragment = this.childFragmentManager.findFragmentById(R.id.contentContainer)
-            val args = this.arguments
+            fragment.arguments = this.arguments
         }
         return inflater?.inflate(R.layout.base_instruction, container, false)
     }
