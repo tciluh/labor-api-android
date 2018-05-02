@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/instruction_image"
+        android:visibility="invisible"
         app:srcCompat="@android:color/background_light" />
+
+    <android.support.v7.widget.RecyclerView
+        android:visibility="invisible"
+        android:id="@+id/actionRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/action_list_content">
+
+
+
+    </android.support.v7.widget.RecyclerView>
 
 
 </android.widget.FrameLayout>
