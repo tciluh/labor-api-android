@@ -11,7 +11,7 @@ androidExtensions {
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "27.0.1"
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "de.uni_hannover.htci.labglasses"
@@ -38,45 +38,45 @@ dependencies {
     implementation 'com.android.support:preference-v7:26.1.0'
     implementation 'com.android.support:design:26.1.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 
     /////////////////////
     //custom dependencies
     /////////////////////
 
     //image download/showing
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 
     //math evaluation
-    compile 'org.mariuszgromada.math:MathParser.org-mXparser:4.1.1'
+    implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.1.1'
 
     //math rendering
-    compile 'com.github.Nishant-Pathak:MathView:v1.1'
+    implementation 'com.github.Nishant-Pathak:MathView:v1.1'
 
     //anko kotlin helpers
-    compile "org.jetbrains.anko:anko:$anko_version"
+    implementation "org.jetbrains.anko:anko:$anko_version"
     //rxjava + android extensions
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     // Because RxAndroid releases are few and far between, it is recommended you also
     // explicitly depend on RxJava's latest version for bug fixes and new features.
-    compile 'io.reactivex.rxjava2:rxjava:2.1.6'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.6'
 
     //retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     //moshi
-    compile 'com.squareup.moshi:moshi:1.5.0'
-    compile 'com.squareup.moshi:moshi-kotlin:1.5.0'
+    implementation 'com.squareup.moshi:moshi:1.5.0'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.5.0'
     //wrapped adapter
-    compile 'com.serjltt.moshi:moshi-lazy-adapters:2.1'
+    implementation 'com.serjltt.moshi:moshi-lazy-adapters:2.1'
     //retrofit moshi converter
-    compile 'com.squareup.retrofit2:converter-moshi:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.3.0'
     //retrofit -> rxjava2 return types call adapter
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
 
     // socketio-java
-    compile ('io.socket:socket.io-client:1.0.0') {
+    implementation ('io.socket:socket.io-client:1.0.0') {
         // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'
     }
