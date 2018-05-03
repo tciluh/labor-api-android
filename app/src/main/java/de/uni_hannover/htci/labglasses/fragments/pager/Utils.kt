@@ -17,4 +17,4 @@ const val MEASUREMENTS_ITEM = "protocol_step_measurements"
 //extend fragment inside this package to allow retrieval of instruction
 val <T: Fragment> T.instruction: Instruction? get() = arguments?.getParcelable(INSTRUCTION_ITEM)
 val <T: Fragment> T.result: Result? get() = arguments?.getParcelable(RESULT_ITEM)
-val <T: Fragment> T.measurements: Map<String, Double>? get() = arguments?.getSerializable(MEASUREMENTS_ITEM) as HashMap<String, Double>
+val <T: Fragment> T.measurements: Map<String, Double>? get() = arguments?.getSerializable(MEASUREMENTS_ITEM) as? HashMap<String, Double>
