@@ -6,11 +6,19 @@ import android.support.v4.app.NavUtils
 import android.view.Menu
 import android.view.MenuItem
 import de.uni_hannover.htci.labglasses.R
+import de.uni_hannover.htci.labglasses.fragments.ActionsDialogFragment
 import de.uni_hannover.htci.labglasses.fragments.ProtocolDetailFragment
+import de.uni_hannover.htci.labglasses.fragments.ResultDialogFragment
+import de.uni_hannover.htci.labglasses.model.Action
+import de.uni_hannover.htci.labglasses.model.Instruction
+import de.uni_hannover.htci.labglasses.model.Result
 import de.uni_hannover.htci.labglasses.utils.consume
 import de.uni_hannover.htci.labglasses.utils.withTransaction
 import kotlinx.android.synthetic.main.activity_protocol_detail.*
+import org.jetbrains.anko.debug
+import org.jetbrains.anko.support.v4.toast
 import org.jetbrains.anko.support.v4.withArguments
+import org.jetbrains.anko.toast
 
 /**
  * An activity representing a single Protocol detail screen. This
@@ -18,15 +26,13 @@ import org.jetbrains.anko.support.v4.withArguments
  * item details are presented side-by-side with a list of items
  * in a [ProtocolListActivity].
  */
-class ProtocolDetailActivity : BaseActivity(){
+class ProtocolDetailActivity : BaseActivity(),
+        ResultDialogFragment.ResultSelectionDelegate,
+        ActionsDialogFragment.MeasurementResultDelegate,
+        ProtocolDetailFragment.BranchingDelegate {
 
-    interface PagingToolbarDelegate {
-        fun onNextPage()
-        fun onPreviousPage()
-        fun onMeasurements()
-    }
-
-    var toolbarDelegate: PagingToolbarDelegate? = null
+    private val detailFragment get() = supportFragmentManager.findFragmentById(R.id.protocol_detail_container) as ProtocolDetailFragment
+    private val completedMeasurements: MutableMap<String, Double> = mutableMapOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,13 +58,9 @@ class ProtocolDetailActivity : BaseActivity(){
                     ProtocolDetailFragment.PROTOCOL_ITEM to
                             intent.getParcelableExtra(ProtocolDetailFragment.PROTOCOL_ITEM)
             )
-            toolbarDelegate = fragment
             supportFragmentManager.withTransaction {
                add(R.id.protocol_detail_container, fragment)
             }
-        }
-        else{
-            toolbarDelegate = supportFragmentManager.findFragmentById(R.id.protocol_detail_container) as? PagingToolbarDelegate
         }
     }
 
@@ -76,19 +78,60 @@ class ProtocolDetailActivity : BaseActivity(){
                     true
                 }
                 R.id.action_previous -> consume {
-                   toolbarDelegate?.onPreviousPage()
+                    detailFragment.previousPage()
                 }
                 R.id.action_next -> consume {
-                    toolbarDelegate?.onNextPage()
+                    detailFragment.nextPage()
                 }
                 R.id.action_measurements -> consume {
-                    toolbarDelegate?.onMeasurements()
+                    val actions: Array<Action> = detailFragment.currentInstruction?.actions ?: error("error parsing actions from api")
+
+                    if(actions.isEmpty()) {
+                        toast("No Measurements defined for this step!").show()
+                    }
+                    ActionsDialogFragment()
+                            .withArguments( ActionsDialogFragment.DIALOG_ACTIONS_ITEM to actions)
+                            .also { it.measurementDelegate = this }
+                            .show(supportFragmentManager, "actions-dialog")
                 }
                 else -> super.onOptionsItemSelected(item)
             }
 
+    override fun onResultSelect(result: Result) {
+        detailFragment.nextPage(result)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.detail_menu, menu)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun selectBranchInstructionResult(current: Instruction) {
+        ResultDialogFragment()
+                .withArguments(ResultDialogFragment.DIALOG_INSTRUCTION_ITEM to current)
+                .also{
+                    it.resultDelegate = this
+                }
+                .show(supportFragmentManager, "result-dialog")
+    }
+
+    override fun onMeasurementCompleted(action: Action, result: Any) {
+        if(action.equationIdentifier != null) {
+            val doubleVal: Double? = when(result) {
+                is Double -> result
+                is String -> result.toDoubleOrNull()
+                else -> result.toString().toDoubleOrNull()
+            }
+            if(doubleVal != null) {
+                completedMeasurements[action.equationIdentifier] = doubleVal
+                detailFragment.updateMeasurements(completedMeasurements)
+            }
+            else {
+                debug("couldn't add: $result to measurementMap as it is not a double")
+            }
+        }
+        else {
+            debug("got result: $result for action: $action, but no equation identifier was set.")
+        }
     }
 }

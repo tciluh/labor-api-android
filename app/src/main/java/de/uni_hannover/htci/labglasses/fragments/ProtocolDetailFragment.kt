@@ -30,19 +30,19 @@ import org.jetbrains.anko.support.v4.withArguments
  * on handsets.
  */
 class ProtocolDetailFragment : Fragment(), AnkoLogger,
-        ViewPager.OnPageChangeListener,
-        ProtocolDetailActivity.PagingToolbarDelegate,
-        ResultDialogFragment.ResultSelectionDelegate,
-        ActionsDialogFragment.MeasurementResultDelegate {
+        ViewPager.OnPageChangeListener {
+
+    interface BranchingDelegate  {
+        fun selectBranchInstructionResult(current: Instruction);
+    }
 
     private val protocol: Protocol by lazy {
         arguments.getParcelable<Protocol>(PROTOCOL_ITEM)
     }
     private var adapter: InstructionPagerAdapter? = null
 
-    private val currentInstruction: Instruction? get() = adapter?.instructionAtIndex(protocol_pager.currentItem)
+    val currentInstruction: Instruction? get() = adapter?.instructionAtIndex(protocol_pager.currentItem)
 
-    private val completedMeasurements: MutableMap<String, Double> = mutableMapOf()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View?
@@ -50,7 +50,7 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        adapter = InstructionPagerAdapter(childFragmentManager, protocol, completedMeasurements.toMap())
+        adapter = InstructionPagerAdapter(childFragmentManager, protocol, mapOf())
         protocol_pager.adapter = adapter
         protocol_pager.addOnPageChangeListener(this)
         activity.title = protocol.name
@@ -84,7 +84,7 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
         }
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
 
-    override fun onNextPage() {
+    fun nextPage() {
         val current = protocol_pager.currentItem
         if(current < protocol_pager.adapter.count - 1) {
             // there is a page preloaded which is next
@@ -96,14 +96,8 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
             // this one
             val instruction = adapter?.instructionAtIndex(current)
             if(instruction != null && instruction.isBranchInstruction) {
-               // show some dialog to decide
-                //which route to take
-                ResultDialogFragment()
-                        .withArguments(ResultDialogFragment.DIALOG_INSTRUCTION_ITEM to instruction)
-                        .also{
-                            it.resultDelegate = this
-                        }
-                        .show(fragmentManager, "result-dialog")
+                //ask delegate which instruction to take next
+                (activity as BranchingDelegate).selectBranchInstructionResult(instruction)
             }
             else{
                 //otherwise just add the next page unconditionally and scroll there
@@ -118,15 +112,7 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
         }
     }
 
-    override fun onPreviousPage() {
-        val current = protocol_pager.currentItem
-        if(current > 0) {
-            protocol_pager.currentItem = current - 1
-        }
-    }
-
-    // called by the dialog when a result is selected
-    override fun onResultSelect(result: Result) {
+    fun nextPage(result: Result) {
         if (result.targetInstructionId == null) return
         val nextInstruction = protocol.instructionById(result.targetInstructionId)
         nextInstruction?.let {
@@ -135,36 +121,15 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
         }
     }
 
-    override fun onMeasurements() {
-        val actions: Array<Action> = currentInstruction?.actions ?: error("error parsing actions from api")
-
-        if(actions.isEmpty()) {
-            toast("No Measurements defined for this step!").show()
+    fun previousPage() {
+        val current = protocol_pager.currentItem
+        if(current > 0) {
+            protocol_pager.currentItem = current - 1
         }
-        ActionsDialogFragment()
-                .withArguments( ActionsDialogFragment.DIALOG_ACTIONS_ITEM to actions)
-                .also { it.measurementDelegate = this }
-                .show(fragmentManager, "actions-dialog")
     }
 
-    override fun onMeasurementCompleted(action: Action, result: Any) {
-        if(action.equationIdentifier != null) {
-            val doubleVal: Double? = when(result) {
-                is Double -> result
-                is String -> result.toDoubleOrNull()
-                else -> result.toString().toDoubleOrNull()
-            }
-            if(doubleVal != null) {
-                completedMeasurements[action.equationIdentifier] = doubleVal
-                (protocol_pager.adapter as InstructionPagerAdapter).setMeasurements(completedMeasurements.toMap())
-            }
-            else {
-                debug("couldnt add: $result to measurementMap as it is not a double")
-            }
-        }
-        else {
-            debug("got result: $result for action: $action, but no equation identifier was set.")
-        }
+    fun updateMeasurements(measurements: Map<String, Double>) {
+        adapter?.setMeasurements(measurements)
     }
 
     companion object {
