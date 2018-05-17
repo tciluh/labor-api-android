@@ -110,7 +110,7 @@ class ProtocolListActivity : BaseActivity(){
                         replace(R.id.protocol_detail_container, fragment)
                     }
                 } else {
-                    startActivity<ProtocolDetailActivity>(ProtocolDetailFragment.PROTOCOL_ITEM to item)
+                    startActivity<ProtocolDetailActivity>(ProtocolDetailActivity.PROTOCOL_ITEM to item)
                 }
             }
             else -> Snackbar.make(recyclerView, "Something else Selected", 1000).show()

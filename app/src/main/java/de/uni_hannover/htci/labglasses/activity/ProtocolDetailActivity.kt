@@ -33,6 +33,8 @@ class ProtocolDetailActivity : BaseActivity(),
 
     private val detailFragment get() = supportFragmentManager.findFragmentById(R.id.protocol_detail_container) as ProtocolDetailFragment
     private val completedMeasurements: MutableMap<String, Double> = mutableMapOf()
+    private val protocol: Protocol get() = intent.getParcelableExtra(PROTOCOL_ITEM)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +57,7 @@ class ProtocolDetailActivity : BaseActivity(),
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             val fragment = ProtocolDetailFragment().withArguments(
-                    ProtocolDetailFragment.PROTOCOL_ITEM to
-                            intent.getParcelableExtra(ProtocolDetailFragment.PROTOCOL_ITEM)
+                    ProtocolDetailFragment.PROTOCOL_ITEM to protocol
             )
             supportFragmentManager.withTransaction {
                add(R.id.protocol_detail_container, fragment)
@@ -133,5 +134,8 @@ class ProtocolDetailActivity : BaseActivity(),
         else {
             debug("got result: $result for action: $action, but no equation identifier was set.")
         }
+
+    companion object {
+        const val PROTOCOL_ITEM = "protocol-detail-protocol-item"
     }
 }
