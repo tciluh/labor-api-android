@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.PagerAdapter
+import android.view.ViewGroup
 import de.uni_hannover.htci.labglasses.fragments.pager.*
 import de.uni_hannover.htci.labglasses.model.Instruction
 import de.uni_hannover.htci.labglasses.model.Protocol
@@ -14,8 +15,10 @@ import kotlin.collections.HashMap
 /**
  * Created by sl33k on 1/5/18.
  */
-class InstructionPagerAdapter(fm: FragmentManager?, private val protocol: Protocol, private var measurements: Map<String, Double>) : FragmentStatePagerAdapter(fm) {
+class InstructionPagerAdapter(fm: FragmentManager?, protocol: Protocol, private var measurements: Map<String, Double>) : FragmentStatePagerAdapter(fm) {
     private var displayedInstructions: ArrayList<Instruction> = arrayListOf(protocol.firstInstruction)
+    data class FragmentInformation(val fragment: Fragment, val type: Instruction.Companion.InstructionType)
+    private val fragmentInfo: MutableMap<Int, FragmentInformation> = mutableMapOf()
     init {
         //add all non branching instructions after the first instruction to be viewable
         var current = protocol.firstInstruction
@@ -34,36 +37,44 @@ class InstructionPagerAdapter(fm: FragmentManager?, private val protocol: Protoc
             else{
                 break
             }
+        }
+    }
 
+    override fun instantiateItem(container: ViewGroup?, position: Int): Any {
+        return super.instantiateItem(container, position).also {
+            if(it is PageContainerFragment){
+                fragmentInfo[position] = FragmentInformation(it, displayedInstructions[position].type)
+            }
+        }
+    }
+
+    override fun destroyItem(container: ViewGroup?, position: Int, fragment: Any?) {
+        super.destroyItem(container, position, fragment)
+        if(fragment is PageContainerFragment) {
+            fragmentInfo.remove(position)
         }
     }
 
     override fun getItem(position: Int): Fragment {
         val instruction = displayedInstructions[position]
         val fragment = PageContainerFragment()
-        val bundle = Bundle()
-        bundle.putParcelable(INSTRUCTION_ITEM, instruction)
-        bundle.putSerializable(MEASUREMENTS_ITEM, measurements.toMap(HashMap()))
-        fragment.arguments = bundle
+        fragment.arguments = generatePageFragmentBundle(position)
         return fragment
     }
     override fun getCount(): Int = displayedInstructions.size
 
     override fun getPageTitle(position: Int): CharSequence = "Step ${position + 1}"
 
-    override fun getItemPosition(obj: Any?): Int = when(obj) {
-        is PageContainerFragment -> if(obj.instruction?.type == Instruction.Companion.InstructionType.Equation) {
-                PagerAdapter.POSITION_NONE
-            }
-            else PagerAdapter.POSITION_UNCHANGED // always update EquationFragments on notifyDataSetChanged()
-        else -> PagerAdapter.POSITION_UNCHANGED
-    }
-
-
-
     val currentInstruction: Instruction get() = displayedInstructions.last()
 
     fun instructionAtIndex(index: Int): Instruction? = displayedInstructions.getOrNull(index)
+
+    private fun generatePageFragmentBundle(position: Int): Bundle {
+        return Bundle().also {
+            it.putParcelable(INSTRUCTION_ITEM, instructionAtIndex(position))
+            it.putSerializable(MEASUREMENTS_ITEM, measurements.toMap(HashMap()))
+        }
+    }
 
     fun add(instruction: Instruction) {
         displayedInstructions.add(instruction)
@@ -72,7 +83,13 @@ class InstructionPagerAdapter(fm: FragmentManager?, private val protocol: Protoc
 
     fun setMeasurements(measurements: Map<String,Double>) {
         this.measurements = measurements
-        notifyDataSetChanged()
+        for((position, info) in fragmentInfo){
+            if(info.type == Instruction.Companion.InstructionType.Equation
+                    && info.fragment is UpdateableFragment) {
+                info.fragment.arguments = generatePageFragmentBundle(position)
+                info.fragment.onArgumentsChanged()
+            }
+        }
     }
 
 

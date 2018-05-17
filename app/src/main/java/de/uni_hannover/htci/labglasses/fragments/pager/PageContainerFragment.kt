@@ -15,7 +15,7 @@ import org.jetbrains.anko.support.v4.withArguments
 /**
  * Created by sl33k on 1/5/18.
  */
-open class PageContainerFragment: Fragment(), AnkoLogger {
+open class PageContainerFragment: Fragment(), AnkoLogger, UpdateableFragment {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if(savedInstanceState == null) {
@@ -52,6 +52,16 @@ open class PageContainerFragment: Fragment(), AnkoLogger {
         //then for a result
         result?.let {
            descriptionTextView.text = it.description
+        }
+    }
+
+    override fun onArgumentsChanged() {
+        val fragment = this.childFragmentManager.findFragmentById(R.id.contentContainer)
+        fragment?.let {
+            if(it is UpdateableFragment){
+                it.arguments = this.arguments
+                it.onArgumentsChanged()
+            }
         }
     }
 }

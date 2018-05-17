@@ -11,6 +11,10 @@ import de.uni_hannover.htci.labglasses.model.Result
 /**
  * Created by sl33k on 1/5/18.
  */
+interface UpdateableFragment {
+    fun onArgumentsChanged();
+}
+
 const val INSTRUCTION_ITEM = "protocol_step_instruction"
 const val RESULT_ITEM = "protocol_step_result"
 const val MEASUREMENTS_ITEM = "protocol_step_measurements"
