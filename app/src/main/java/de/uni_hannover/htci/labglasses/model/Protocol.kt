@@ -18,7 +18,6 @@ data class Protocol(val id: Int, val name: String, val description: String, val 
     }
     override fun equals(other: Any?): Boolean{
         return when (other) {
-            this -> return true
             is Protocol -> other.id == this.id
             else -> return false
         }

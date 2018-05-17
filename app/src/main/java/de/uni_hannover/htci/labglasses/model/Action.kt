@@ -13,7 +13,6 @@ import kotlinx.android.parcel.Parcelize
 data class Action(val id: Int, val identifier: String, val action: String, val arguments: Map<String, String>, val equationIdentifier: String?) : Parcelable {
     override fun equals(other: Any?): Boolean
        = when(other) {
-        this -> true
         is Action -> other.id == this.id
         else -> false
     }

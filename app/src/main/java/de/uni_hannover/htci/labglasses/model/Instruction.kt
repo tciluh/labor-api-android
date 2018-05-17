@@ -15,7 +15,6 @@ data class Instruction(val id: Int, val isFirst: Boolean, val description: Strin
     }
     override fun equals(other: Any?): Boolean{
         return when (other) {
-            this -> return true
             is Instruction -> other.id == this.id
             else -> return false
         }
@@ -41,7 +40,7 @@ data class Instruction(val id: Int, val isFirst: Boolean, val description: Strin
     }
 
     val nextInstructionId: Int? get() {
-        //we cant determine a definitive next instruction if the result is ambiguous
+        //we cant determine a definitive next instruction if the result is unambiguous
         if(this.isBranchInstruction)
             return null
         val result = this.results.firstOrNull()
