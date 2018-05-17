@@ -3,13 +3,14 @@ package de.uni_hannover.htci.labglasses.model
 import android.annotation.SuppressLint
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import kotlin.concurrent.timer
 
 /**
  * Created by sl33k on 11/6/17.
  */
 @Parcelize
 @SuppressLint("ParcelCreator")
-data class Instruction(val id: Int, val isFirst: Boolean, val description: String, val imageId: Int? = null, val equation: String? = null, val timerDuration: String? = null, val results: Array<Result>, val actions: Array<Action>) : Parcelable {
+data class Instruction(val id: Int, val isFirst: Boolean, val description: String, val imageId: Int? = null, val equation: String? = null, val timerDuration: String? = null, val results: Array<Result>, var actions: Array<Action>) : Parcelable {
     init {
         results.sortBy { it.id }
     }
@@ -21,6 +22,10 @@ data class Instruction(val id: Int, val isFirst: Boolean, val description: Strin
     }
 
     override fun hashCode(): Int = this.id
+
+    fun copy(): Instruction = Instruction(id, isFirst, description, imageId, equation, timerDuration, results.map { it.copy() }.toTypedArray(), actions.map { it.copy()}.toTypedArray() )
+
+    fun actionForId(actionId: Int) = this.actions.first { it.id == actionId }
 
     val isBranchInstruction get() = this.results.size > 1
 

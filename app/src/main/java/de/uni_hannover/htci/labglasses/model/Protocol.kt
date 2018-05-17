@@ -12,7 +12,7 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 @SuppressLint("ParcelCreator")
-data class Protocol(val id: Int, val name: String, val description: String, val instructions: Array<Instruction>) : Parcelable, ViewType {
+data class Protocol(val id: Int, val name: String, val description: String, var instructions: Array<Instruction>) : Parcelable, ViewType {
     init {
         instructions.sortBy { it.id }
     }
@@ -29,6 +29,8 @@ data class Protocol(val id: Int, val name: String, val description: String, val 
     val firstInstruction: Instruction get() = this.instructions.first { it.isFirst }
 
     fun instructionById(id: Int): Instruction? = this.instructions.firstOrNull { it.id == id }
+
+    fun instructionForAction(action: Action) = this.instructions.firstOrNull { it.actions.contains(action) }
 
     override fun hashCode(): Int = this.id
 

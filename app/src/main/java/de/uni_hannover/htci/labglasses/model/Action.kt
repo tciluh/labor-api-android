@@ -10,11 +10,34 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @SuppressLint("ParcelCreator")
-data class Action(val id: Int, val identifier: String, val action: String, val arguments: Map<String, String>, val equationIdentifier: String?) : Parcelable {
+data class Action(val id: Int,
+                  val identifier: String,
+                  val action: String,
+                  val arguments: Map<String, String>,
+                  val equationIdentifier: String?,
+                  var state: MeasurementState = MeasurementState.NotStarted ,
+                  private val results: MutableList<Double> = mutableListOf()) : Parcelable {
     override fun equals(other: Any?): Boolean
        = when(other) {
         is Action -> other.id == this.id
         else -> false
     }
     override fun hashCode(): Int = this.id
+
+    fun copy(): Action = Action(id, identifier, action, arguments.toMap(), equationIdentifier, state, results.toMutableList())
+
+    enum class MeasurementState {
+        NotStarted,
+        InProgress,
+        Done,
+        Error
+    }
+
+    fun addResult(result: Double) {
+        this.state = MeasurementState.Done
+        this.results.add(result)
+    }
+    val hasResult get() = results.isNotEmpty()
+    val amountOfResults get() = results.size
+    val result: String get() = String.format("%.2f", results.last())
 }
