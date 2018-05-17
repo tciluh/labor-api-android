@@ -128,8 +128,12 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
         }
     }
 
-    fun updateMeasurements(measurements: Map<String, Double>) {
-        adapter?.setMeasurements(measurements)
+    fun onUpdatedMeasurements(measurements: Map<String, Double>) {
+        adapter?.updateMeasurements(measurements)
+    }
+
+    fun onUpdatedInstruction(instruction: Instruction) {
+        adapter?.updateInstruction(instruction)
     }
 
     companion object {

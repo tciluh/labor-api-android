@@ -3,20 +3,23 @@ package de.uni_hannover.htci.labglasses.fragments.pager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.preference.PreferenceManager
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import com.squareup.picasso.Picasso
 import de.uni_hannover.htci.labglasses.activity.BaseActivity.Companion.API_HOST_PREFERENCE
 import de.uni_hannover.htci.labglasses.activity.BaseActivity.Companion.API_PORT_PREFERENCE
 import de.uni_hannover.htci.labglasses.R
+import de.uni_hannover.htci.labglasses.adapter.ActionListAdapter
 import kotlinx.android.synthetic.main.simple_instruction.*
 
 /**
  * Created by sl33k on 1/5/18.
  * The Fragment that display a simple instruction or result with a picture
  */
-class SimpleFragment: Fragment() {
+class SimpleFragment: Fragment(), UpdateableFragment {
     lateinit var host: String
     lateinit var port: String
 
@@ -31,11 +34,32 @@ class SimpleFragment: Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val imageId: Int? = instruction?.imageId ?: result?.imageId
+        val actions = instruction?.actions
+
         imageId?.let {
             Picasso.with(context)
                     .load("http://$host:$port/image/$it")
                     .fit()
                     .into(imageView)
+            imageView.visibility = View.VISIBLE
+        }
+        actions?.let {
+            if(actions.isNotEmpty()){
+                // cant be null here otherwise the let block wouldnt be executed
+                actionRecyclerView.adapter = ActionListAdapter(instruction!!.actions)
+                        .also {
+                            it.delegate = activity as ActionListAdapter.ActionDelegate
+                        }
+
+                actionRecyclerView.layoutManager = LinearLayoutManager(context)
+                actionRecyclerView.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    override fun onArgumentsChanged() {
+        instruction?.actions?.let {
+            (actionRecyclerView.adapter as? ActionListAdapter)?.updateActions(instruction!!.actions)
         }
     }
 }

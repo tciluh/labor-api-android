@@ -12,10 +12,11 @@ import kotlinx.android.parcel.Parcelize
 data class Result(val id: Int, val description: String, val targetInstructionId: Int? = null, val imageId: Int? = null) : Parcelable {
     override fun equals(other: Any?): Boolean{
         return when (other) {
-            this -> return true
             is Result -> other.id == this.id
             else -> return false
         }
     }
+    fun copy() = Result(id, description, targetInstructionId, imageId)
+
     override fun hashCode(): Int = this.id
 }
