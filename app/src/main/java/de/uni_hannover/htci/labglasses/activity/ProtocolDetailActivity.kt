@@ -6,19 +6,20 @@ import android.support.v4.app.NavUtils
 import android.view.Menu
 import android.view.MenuItem
 import de.uni_hannover.htci.labglasses.R
-import de.uni_hannover.htci.labglasses.fragments.ActionsDialogFragment
+import de.uni_hannover.htci.labglasses.adapter.ActionListAdapter
 import de.uni_hannover.htci.labglasses.fragments.ProtocolDetailFragment
 import de.uni_hannover.htci.labglasses.fragments.ResultDialogFragment
 import de.uni_hannover.htci.labglasses.model.Action
+import de.uni_hannover.htci.labglasses.model.Action.MeasurementState.*
 import de.uni_hannover.htci.labglasses.model.Instruction
+import de.uni_hannover.htci.labglasses.model.Protocol
 import de.uni_hannover.htci.labglasses.model.Result
+import de.uni_hannover.htci.labglasses.singletons.SocketManager
 import de.uni_hannover.htci.labglasses.utils.consume
 import de.uni_hannover.htci.labglasses.utils.withTransaction
 import kotlinx.android.synthetic.main.activity_protocol_detail.*
 import org.jetbrains.anko.debug
-import org.jetbrains.anko.support.v4.toast
 import org.jetbrains.anko.support.v4.withArguments
-import org.jetbrains.anko.toast
 
 /**
  * An activity representing a single Protocol detail screen. This
@@ -28,8 +29,8 @@ import org.jetbrains.anko.toast
  */
 class ProtocolDetailActivity : BaseActivity(),
         ResultDialogFragment.ResultSelectionDelegate,
-        ActionsDialogFragment.MeasurementResultDelegate,
-        ProtocolDetailFragment.BranchingDelegate {
+        ProtocolDetailFragment.BranchingDelegate,
+        ActionListAdapter.ActionDelegate {
 
     private val detailFragment get() = supportFragmentManager.findFragmentById(R.id.protocol_detail_container) as ProtocolDetailFragment
     private val completedMeasurements: MutableMap<String, Double> = mutableMapOf()
@@ -84,17 +85,6 @@ class ProtocolDetailActivity : BaseActivity(),
                 R.id.action_next -> consume {
                     detailFragment.nextPage()
                 }
-                R.id.action_measurements -> consume {
-                    val actions: Array<Action> = detailFragment.currentInstruction?.actions ?: error("error parsing actions from api")
-
-                    if(actions.isEmpty()) {
-                        toast("No Measurements defined for this step!").show()
-                    }
-                    ActionsDialogFragment()
-                            .withArguments( ActionsDialogFragment.DIALOG_ACTIONS_ITEM to actions)
-                            .also { it.measurementDelegate = this }
-                            .show(supportFragmentManager, "actions-dialog")
-                }
                 else -> super.onOptionsItemSelected(item)
             }
 
@@ -116,24 +106,54 @@ class ProtocolDetailActivity : BaseActivity(),
                 .show(supportFragmentManager, "result-dialog")
     }
 
-    override fun onMeasurementCompleted(action: Action, result: Any) {
-        if(action.equationIdentifier != null) {
-            val doubleVal: Double? = when(result) {
-                is Double -> result
-                is String -> result.toDoubleOrNull()
-                else -> result.toString().toDoubleOrNull()
-            }
-            if(doubleVal != null) {
-                completedMeasurements[action.equationIdentifier] = doubleVal
-                detailFragment.updateMeasurements(completedMeasurements)
-            }
-            else {
-                debug("couldn't add: $result to measurementMap as it is not a double")
-            }
+    override fun handleAction(action: Action) {
+        // the actions that is recieved here is a copy
+        val instruction = protocol.instructionForAction(action)
+        if(instruction != null) {
+            instruction.actionForId(action.id).state = InProgress
+            detailFragment.onUpdatedInstruction(instruction)
         }
         else {
-            debug("got result: $result for action: $action, but no equation identifier was set.")
+            debug("no instruction for action: $action found.")
+            return
         }
+
+        SocketManager.getInstance(this).sendAction(action, {
+            result ->
+            runOnUiThread {
+                if(action.equationIdentifier != null) {
+                    val doubleVal: Double? = when(result) {
+                        is Double -> result
+                        is String -> result.toDoubleOrNull()
+                        else -> result.toString().toDoubleOrNull()
+                    }
+                    if(doubleVal != null) {
+                        completedMeasurements[action.equationIdentifier] = doubleVal
+                        instruction.actionForId(action.id).addResult(doubleVal)
+                        detailFragment.onUpdatedMeasurements(completedMeasurements)
+                        detailFragment.onUpdatedInstruction(instruction)
+                    }
+                    else {
+                        debug("couldn't add: $result to measurementMap as it is not a double")
+                        instruction.actionForId(action.id).state = Error
+                        detailFragment.onUpdatedInstruction(instruction)
+                    }
+                }
+                else {
+                    debug("got result: $result for action: $action, but no equation identifier was set.")
+                    instruction.actionForId(action.id).state = Error
+                    detailFragment.onUpdatedInstruction(instruction)
+                }
+            }
+        }, {
+            error ->
+            runOnUiThread {
+                instruction.actionForId(action.id).state = Error
+                detailFragment.onUpdatedInstruction(instruction)
+            }
+
+        })
+    }
 
     companion object {
         const val PROTOCOL_ITEM = "protocol-detail-protocol-item"

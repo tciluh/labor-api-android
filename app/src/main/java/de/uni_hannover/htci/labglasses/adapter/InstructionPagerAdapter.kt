@@ -81,7 +81,7 @@ class InstructionPagerAdapter(fm: FragmentManager?, protocol: Protocol, private 
         notifyDataSetChanged()
     }
 
-    fun setMeasurements(measurements: Map<String,Double>) {
+    fun updateMeasurements(measurements: Map<String,Double>) {
         this.measurements = measurements
         for((position, info) in fragmentInfo){
             if(info.type == Instruction.Companion.InstructionType.Equation
@@ -92,5 +92,17 @@ class InstructionPagerAdapter(fm: FragmentManager?, protocol: Protocol, private 
         }
     }
 
+    fun updateInstruction(instruction: Instruction) {
+        val currentPos = displayedInstructions.indexOfFirst { instr -> instr.id == instruction.id }
+        if(currentPos == -1) error("couldn't find instruction: $instruction in displayedInstructions")
+        val info = fragmentInfo[currentPos]
+        displayedInstructions[currentPos] = instruction
+        if(info != null
+                && info.fragment is UpdateableFragment
+                && info.type == Instruction.Companion.InstructionType.Simple) {
+            info.fragment.arguments = generatePageFragmentBundle(currentPos)
+            info.fragment.onArgumentsChanged()
+        }
+    }
 
 }

@@ -19,4 +19,7 @@
     <string name="action_dialog_title">Actions</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_okay">Okay</string>
+    <string name="action_item_not_started">not started.</string>
+    <string name="action_item_inprogress">measuring...</string>
+    <string name="action_item_error">error!</string>
 </resources>
