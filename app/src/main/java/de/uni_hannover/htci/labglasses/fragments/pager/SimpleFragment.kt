@@ -55,6 +55,10 @@ class SimpleFragment: Fragment(), UpdateableFragment {
                 actionRecyclerView.visibility = View.VISIBLE
             }
         }
+        if(actionRecyclerView.visibility == View.VISIBLE && imageView.visibility == View.VISIBLE) {
+            actionRecyclerView.visibility = View.GONE
+            imageView.visibility = View.VISIBLE
+        }
     }
 
     override fun onArgumentsChanged() {

@@ -42,6 +42,7 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
     private var adapter: InstructionPagerAdapter? = null
 
     val currentInstruction: Instruction? get() = adapter?.instructionAtIndex(protocol_pager.currentItem)
+    var currentVisiblePage: Int = 0
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +55,13 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
         protocol_pager.adapter = adapter
         protocol_pager.addOnPageChangeListener(this)
         activity.title = protocol.name
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        adapter?.let {
+            it.onPageVisible(0)
+        }
     }
 
     override fun onPageSelected(position: Int) {
@@ -70,18 +78,13 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
                    }
                }
            }
+            it.onPageHidden(currentVisiblePage)
+            currentVisiblePage = position
+            it.onPageVisible(currentVisiblePage)
         }
     }
-    override fun onPageScrollStateChanged(state: Int) = when(state)  {
-           SCROLL_STATE_SETTLING -> {
-               Handler().postDelayed({
-                   toast(getString(R.string.protocol_pager_step_x,
-                           protocol_pager.currentItem + 1)).show()
-               }, 200)
-               Unit
-           }
-           else -> Unit
-        }
+
+    override fun onPageScrollStateChanged(state: Int) = Unit
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
 
     fun nextPage() {

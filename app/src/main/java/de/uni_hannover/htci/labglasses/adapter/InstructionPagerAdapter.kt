@@ -24,17 +24,15 @@ class InstructionPagerAdapter(fm: FragmentManager?, protocol: Protocol, private 
         var current = protocol.firstInstruction
         while(true) {
             val nextId: Int? = current.nextInstructionId
-            if(nextId != null) {
+            if (nextId != null) {
                 val nextInstruction = protocol.instructionById(nextId)
-                if(nextInstruction != null){
+                if (nextInstruction != null) {
                     current = nextInstruction
                     displayedInstructions.add(current)
-                }
-                else{
+                } else {
                     break
                 }
-            }
-            else{
+            } else {
                 break
             }
         }
@@ -102,6 +100,22 @@ class InstructionPagerAdapter(fm: FragmentManager?, protocol: Protocol, private 
                 && info.type == Instruction.Companion.InstructionType.Simple) {
             info.fragment.arguments = generatePageFragmentBundle(currentPos)
             info.fragment.onArgumentsChanged()
+        }
+    }
+
+    fun onPageVisible(index: Int) {
+        val info = fragmentInfo[index]
+        if(info != null
+                && info.fragment is PagingAwareFragment) {
+            info.fragment.onPageVisible()
+        }
+    }
+
+    fun onPageHidden(index: Int) {
+        val info = fragmentInfo[index]
+        if(info != null
+                && info.fragment is PagingAwareFragment) {
+            info.fragment.onPageHidden()
         }
     }
 

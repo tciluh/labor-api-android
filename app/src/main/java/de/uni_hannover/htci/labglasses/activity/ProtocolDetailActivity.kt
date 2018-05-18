@@ -9,6 +9,7 @@ import de.uni_hannover.htci.labglasses.R
 import de.uni_hannover.htci.labglasses.adapter.ActionListAdapter
 import de.uni_hannover.htci.labglasses.fragments.ProtocolDetailFragment
 import de.uni_hannover.htci.labglasses.fragments.ResultDialogFragment
+import de.uni_hannover.htci.labglasses.fragments.pager.TimerFragment
 import de.uni_hannover.htci.labglasses.model.Action
 import de.uni_hannover.htci.labglasses.model.Action.MeasurementState.*
 import de.uni_hannover.htci.labglasses.model.Instruction
@@ -30,7 +31,9 @@ import org.jetbrains.anko.support.v4.withArguments
 class ProtocolDetailActivity : BaseActivity(),
         ResultDialogFragment.ResultSelectionDelegate,
         ProtocolDetailFragment.BranchingDelegate,
-        ActionListAdapter.ActionDelegate {
+        ActionListAdapter.ActionDelegate,
+        TimerFragment.TimerStepFragmentDelegate
+{
 
     private val detailFragment get() = supportFragmentManager.findFragmentById(R.id.protocol_detail_container) as ProtocolDetailFragment
     private val completedMeasurements: MutableMap<String, Double> = mutableMapOf()
@@ -153,6 +156,10 @@ class ProtocolDetailActivity : BaseActivity(),
             }
 
         })
+    }
+
+    override fun onTimerStepFinished() {
+        detailFragment.nextPage()
     }
 
     companion object {
