@@ -11,13 +11,14 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/instruction_image"
         app:srcCompat="@android:color/background_light"
-        android:visibility="invisible"
+        android:visibility="gone"
         />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/actionRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/action_list_content"
+        android:visibility="gone"
         />
 
 
