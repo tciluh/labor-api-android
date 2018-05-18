@@ -13,7 +13,7 @@
     <string name="timer_reset_button">Reset</string>
     <string name="timer_start_button">Start</string>
     <string name="instruction_image">Instruction Image</string>
-    <string name="countdown_timer">Timer: %1$s</string>
+    <string name="countdown_timer">%1$s</string>
     <string name="protocol_pager_step_x">Step %1$d</string>
     <string name="result_dialog_title">Select which result applies</string>
     <string name="action_dialog_title">Actions</string>
