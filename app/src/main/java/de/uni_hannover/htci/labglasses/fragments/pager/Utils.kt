@@ -12,7 +12,14 @@ import de.uni_hannover.htci.labglasses.model.Result
  * Created by sl33k on 1/5/18.
  */
 interface UpdateableFragment {
-    fun onArgumentsChanged();
+    fun onArgumentsChanged()
+}
+
+interface PagingAwareFragment {
+    /* called when the page containing this fragment becomes visible */
+    fun onPageVisible()
+    /* called when the page containing this fragment becomes hidden */
+    fun onPageHidden()
 }
 
 const val INSTRUCTION_ITEM = "protocol_step_instruction"
