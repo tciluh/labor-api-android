@@ -57,12 +57,7 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
         activity.title = protocol.name
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        adapter?.let {
-            it.onPageVisible(0)
-        }
-    }
+
 
     override fun onPageSelected(position: Int) {
         adapter?.let {

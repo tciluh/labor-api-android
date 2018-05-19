@@ -19,6 +19,8 @@ class InstructionPagerAdapter(fm: FragmentManager?, protocol: Protocol, private 
     private var displayedInstructions: ArrayList<Instruction> = arrayListOf(protocol.firstInstruction)
     data class FragmentInformation(val fragment: Fragment, val type: Instruction.Companion.InstructionType)
     private val fragmentInfo: MutableMap<Int, FragmentInformation> = mutableMapOf()
+    private var instantiated = false
+
     init {
         //add all non branching instructions after the first instruction to be viewable
         var current = protocol.firstInstruction
@@ -50,6 +52,14 @@ class InstructionPagerAdapter(fm: FragmentManager?, protocol: Protocol, private 
         super.destroyItem(container, position, fragment)
         if(fragment is PageContainerFragment) {
             fragmentInfo.remove(position)
+        }
+    }
+
+    override fun finishUpdate(container: ViewGroup?) {
+        super.finishUpdate(container)
+        if(!instantiated) {
+            instantiated = true
+            onPageVisible(0)
         }
     }
 
