@@ -13,6 +13,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
 
+
     defaultConfig {
         applicationId "de.uni_hannover.htci.labglasses"
         minSdkVersion 15
@@ -21,6 +22,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {

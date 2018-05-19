@@ -3,6 +3,7 @@ package de.uni_hannover.htci.labglasses.fragments.pager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.preference.PreferenceManager
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +20,7 @@ import kotlinx.android.synthetic.main.simple_instruction.*
  * Created by sl33k on 1/5/18.
  * The Fragment that display a simple instruction or result with a picture
  */
-class SimpleFragment: Fragment(), UpdateableFragment {
+class SimpleFragment: Fragment(), UpdateableFragment, PagingAwareFragment {
     lateinit var host: String
     lateinit var port: String
 
@@ -50,9 +51,11 @@ class SimpleFragment: Fragment(), UpdateableFragment {
                         .also {
                             it.delegate = activity as ActionListAdapter.ActionDelegate
                         }
-
                 actionRecyclerView.layoutManager = LinearLayoutManager(context)
                 actionRecyclerView.visibility = View.VISIBLE
+                //setup cell divider
+                val dividerItemDecoration = DividerItemDecoration(actionRecyclerView.context, DividerItemDecoration.VERTICAL)
+                actionRecyclerView.addItemDecoration(dividerItemDecoration)
             }
         }
         if(actionRecyclerView.visibility == View.VISIBLE && imageView.visibility == View.VISIBLE) {
@@ -66,4 +69,12 @@ class SimpleFragment: Fragment(), UpdateableFragment {
             (actionRecyclerView.adapter as? ActionListAdapter)?.updateActions(instruction!!.actions)
         }
     }
+
+    override fun onPageVisible() {
+        if(actionRecyclerView.visibility == View.VISIBLE) {
+            (actionRecyclerView.adapter as ActionListAdapter).startNextPendingAction()
+        }
+    }
+
+    override fun onPageHidden() = Unit
 }
