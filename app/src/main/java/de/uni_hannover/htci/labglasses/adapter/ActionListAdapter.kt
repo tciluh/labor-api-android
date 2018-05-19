@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.action_list_content.view.*
  */
 class ActionListAdapter(var actions: Array<Action>): RecyclerView.Adapter<ActionListAdapter.ActionViewHolder>() {
     interface ActionDelegate {
-        fun handleAction(action: Action)
+        fun handleAction(action: Action, onFinish: (() -> Unit)? = null)
     }
     var delegate: ActionDelegate? = null
 

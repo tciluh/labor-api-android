@@ -109,7 +109,7 @@ class ProtocolDetailActivity : BaseActivity(),
                 .show(supportFragmentManager, "result-dialog")
     }
 
-    override fun handleAction(action: Action) {
+    override fun handleAction(action: Action, onFinish: (() -> Unit)? ){
         // the actions that is recieved here is a copy
         val instruction = protocol.instructionForAction(action)
         if(instruction != null) {
@@ -135,17 +135,20 @@ class ProtocolDetailActivity : BaseActivity(),
                         instruction.actionForId(action.id).addResult(doubleVal)
                         detailFragment.onUpdatedMeasurements(completedMeasurements)
                         detailFragment.onUpdatedInstruction(instruction)
+                        onFinish?.invoke()
                     }
                     else {
                         debug("couldn't add: $result to measurementMap as it is not a double")
                         instruction.actionForId(action.id).state = Error
                         detailFragment.onUpdatedInstruction(instruction)
+                        onFinish?.invoke()
                     }
                 }
                 else {
                     debug("got result: $result for action: $action, but no equation identifier was set.")
                     instruction.actionForId(action.id).state = Error
                     detailFragment.onUpdatedInstruction(instruction)
+                    onFinish?.invoke()
                 }
             }
         }, {
@@ -153,6 +156,7 @@ class ProtocolDetailActivity : BaseActivity(),
             runOnUiThread {
                 instruction.actionForId(action.id).state = Error
                 detailFragment.onUpdatedInstruction(instruction)
+                onFinish?.invoke()
             }
 
         })
