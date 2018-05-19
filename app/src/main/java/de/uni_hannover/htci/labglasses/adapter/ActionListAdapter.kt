@@ -1,10 +1,14 @@
 package de.uni_hannover.htci.labglasses.adapter
 
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings.Global.getString
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import de.uni_hannover.htci.labglasses.R
 import de.uni_hannover.htci.labglasses.model.Action
@@ -31,26 +35,45 @@ class ActionListAdapter(var actions: Array<Action>): RecyclerView.Adapter<Action
     override fun getItemCount(): Int = actions.count()
 
     override fun onBindViewHolder(holder: ActionViewHolder?, position: Int) {
-        if(holder == null) return;
+        if(holder == null) return
 
         val item = actions[position]
-        holder.button.setOnClickListener { _ ->
-            delegate?.handleAction(item)
-        }
         holder.actionView.text = item.action
         holder.identifierView.text = item.identifier
+        holder.errorButton.setOnClickListener {
+            delegate?.handleAction(item)
+        }
+        holder.itemView.setOnClickListener {
+            val item = this.actions[position]
+            if(item.state != MeasurementState.InProgress) {
+                delegate?.handleAction(item)
+            }
+        }
+
         when(item.state) {
             MeasurementState.NotStarted -> {
                 holder.resultView.text = holder.resultView.context.getString(R.string.action_item_not_started)
+                holder.resultView.visibility = View.VISIBLE
+                holder.errorButton.visibility = View.INVISIBLE
+                holder.progressSpinner.visibility = View.INVISIBLE
             }
             MeasurementState.InProgress -> {
-                holder.resultView.text = holder.resultView.context.getString(R.string.action_item_inprogress)
+                holder.resultView.visibility = View.INVISIBLE
+                holder.errorButton.visibility = View.INVISIBLE
+                holder.progressSpinner.visibility = View.VISIBLE
+
             }
             MeasurementState.Done -> {
                 holder.resultView.text = item.result
+
+                holder.resultView.visibility = View.VISIBLE
+                holder.errorButton.visibility = View.INVISIBLE
+                holder.progressSpinner.visibility = View.INVISIBLE
             }
             MeasurementState.Error -> {
-                holder.resultView.text = holder.resultView.context.getString(R.string.action_item_error)
+                holder.resultView.visibility = View.INVISIBLE
+                holder.errorButton.visibility = View.VISIBLE
+                holder.progressSpinner.visibility = View.INVISIBLE
             }
         }
     }
@@ -74,10 +97,20 @@ class ActionListAdapter(var actions: Array<Action>): RecyclerView.Adapter<Action
         }
     }
 
+    fun startNextPendingAction() {
+        val action = actions.firstOrNull { a -> a.state == MeasurementState.NotStarted }
+        action?.let {
+            delegate?.handleAction(it, {
+                startNextPendingAction()
+            })
+        }
+    }
+
     class ActionViewHolder(itemView: View?): RecyclerView.ViewHolder(itemView) {
-        val identifierView: TextView = itemView?.action ?: throw IllegalStateException("cant find identifier view")
-        val actionView: TextView = itemView?.identifier ?: throw IllegalStateException("cant find action view")
+        val identifierView: TextView = itemView?.identifier ?: throw IllegalStateException("cant find identifier view")
+        val actionView: TextView = itemView?.action ?: throw IllegalStateException("cant find action view")
         val resultView: TextView = itemView?.result ?: throw IllegalStateException("cant find result view")
-        val button: Button = itemView?.start_button ?: throw IllegalStateException("cant find button view")
+        val progressSpinner: ProgressBar = itemView?.inProgressSpinner ?: throw IllegalStateException("cant find progress spinner")
+        val errorButton: ImageView = itemView?.errorButton ?: throw IllegalStateException("cant find error view")
     }
 }

@@ -8,7 +8,8 @@
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:layout_editor_absoluteY="81dp">
 
     <TextView
         android:id="@+id/identifier"
@@ -37,28 +38,47 @@
 
     <TextView
         android:id="@+id/result"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="0.0"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="end"
         android:textAlignment="textEnd"
-        app:layout_constraintBaseline_toBaselineOf="@+id/start_button"
-        app:layout_constraintEnd_toStartOf="@+id/start_button"
-        app:layout_constraintStart_toEndOf="@+id/identifier"
-        android:gravity="end" />
+        android:textSize="30sp"
+        android:textColor="@color/colorGrey"
+        app:fontFamily="sans-serif"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/start_button"
-        android:layout_width="88dp"
-        android:layout_height="48dp"
+    <ProgressBar
+        android:id="@+id/inProgressSpinner"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Do it"
-        android:layout_marginRight="8dp" />
+        android:visibility="invisible"
+        />
+
+    <ImageButton
+        android:id="@+id/errorButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@android:color/transparent"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/inProgressSpinner"
+        app:layout_constraintBottom_toBottomOf="@+id/inProgressSpinner"
+        app:srcCompat="@drawable/ic_error_outline_black_48dp"
+        tools:layout_editor_absoluteY="9dp" />
+
 
 </android.support.constraint.ConstraintLayout>
