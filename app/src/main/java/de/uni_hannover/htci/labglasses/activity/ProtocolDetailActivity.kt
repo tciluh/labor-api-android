@@ -82,12 +82,14 @@ class ProtocolDetailActivity : BaseActivity(),
                     NavUtils.navigateUpTo(this, Intent(this, ProtocolListActivity::class.java))
                     true
                 }
+                /*
                 R.id.action_previous -> consume {
                     detailFragment.previousPage()
                 }
                 R.id.action_next -> consume {
                     detailFragment.nextPage()
                 }
+                */
                 else -> super.onOptionsItemSelected(item)
             }
 

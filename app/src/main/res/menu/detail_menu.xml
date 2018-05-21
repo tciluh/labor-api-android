@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/action_previous"
-        android:title="@string/action_previous"
-        android:icon="@drawable/ic_navigate_before_white_24dp"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/action_next"
-        android:title="@string/action_next"
-        android:icon="@drawable/ic_navigate_next_white_24dp"
-        app:showAsAction="always" />
-
 </menu>
