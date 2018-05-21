@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.view.ViewPager
+    <de.uni_hannover.htci.labglasses.views.KeyboardViewPager
         android:id="@+id/result_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,7 +18,7 @@
 
         </android.support.v4.view.PagerTabStrip>
 
-    </android.support.v4.view.ViewPager>
+    </de.uni_hannover.htci.labglasses.views.KeyboardViewPager>
 
     <LinearLayout
         android:id="@+id/button_layout"

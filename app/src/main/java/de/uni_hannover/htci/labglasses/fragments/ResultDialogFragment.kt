@@ -10,12 +10,13 @@ import de.uni_hannover.htci.labglasses.R
 import de.uni_hannover.htci.labglasses.adapter.ResultPagerAdapter
 import de.uni_hannover.htci.labglasses.model.Instruction
 import de.uni_hannover.htci.labglasses.model.Result
+import de.uni_hannover.htci.labglasses.views.KeyboardViewPager
 import kotlinx.android.synthetic.main.result_dialog.*
 
 /**
  * Created by sl33k on 1/7/18.
  */
-class ResultDialogFragment: DialogFragment() {
+class ResultDialogFragment: DialogFragment(), KeyboardViewPager.NavigationDelegate {
     interface ResultSelectionDelegate {
         fun onResultSelect(result: Result)
     }
@@ -32,6 +33,7 @@ class ResultDialogFragment: DialogFragment() {
         super.onActivityCreated(savedInstanceState)
         result_pager.adapter = ResultPagerAdapter(childFragmentManager, instruction)
         result_pager_tabstrip.drawFullUnderline = false
+        result_pager.navigationDelegate = this
         dialog_cancel_button.setOnClickListener {
             this.dismiss()
         }
@@ -42,10 +44,25 @@ class ResultDialogFragment: DialogFragment() {
         }
     }
 
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setTitle(getString(R.string.result_dialog_title))
         return dialog
+    }
+
+    override fun onLeftDpad() {
+        result_pager.currentItem--
+    }
+
+    override fun onRightDpad() {
+        result_pager.currentItem++
+    }
+
+    override fun onCenterDpad() {
+        val result = instruction.results[result_pager.currentItem]
+        resultDelegate?.onResultSelect(result)
+        this.dismiss()
     }
 
     private val instruction: Instruction get() = arguments.getParcelable(DIALOG_INSTRUCTION_ITEM)

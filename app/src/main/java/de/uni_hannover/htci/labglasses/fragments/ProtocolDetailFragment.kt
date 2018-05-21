@@ -16,6 +16,7 @@ import de.uni_hannover.htci.labglasses.adapter.InstructionPagerAdapter
 import de.uni_hannover.htci.labglasses.model.Action
 import de.uni_hannover.htci.labglasses.model.Instruction
 import de.uni_hannover.htci.labglasses.model.Result
+import de.uni_hannover.htci.labglasses.views.KeyboardViewPager
 
 import kotlinx.android.synthetic.main.protocol_detail.*
 import org.jetbrains.anko.AnkoLogger
@@ -54,7 +55,10 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
         adapter = InstructionPagerAdapter(childFragmentManager, protocol, mapOf())
         protocol_pager.adapter = adapter
         protocol_pager.addOnPageChangeListener(this)
+        protocol_pager.navigationDelegate = (activity as KeyboardViewPager.NavigationDelegate)
         activity.title = protocol.name
+
+        protocol_pager.requestFocus()
     }
 
 

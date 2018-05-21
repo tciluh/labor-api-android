@@ -18,6 +18,7 @@ import de.uni_hannover.htci.labglasses.model.Result
 import de.uni_hannover.htci.labglasses.singletons.SocketManager
 import de.uni_hannover.htci.labglasses.utils.consume
 import de.uni_hannover.htci.labglasses.utils.withTransaction
+import de.uni_hannover.htci.labglasses.views.KeyboardViewPager
 import kotlinx.android.synthetic.main.activity_protocol_detail.*
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.support.v4.withArguments
@@ -32,7 +33,8 @@ class ProtocolDetailActivity : BaseActivity(),
         ResultDialogFragment.ResultSelectionDelegate,
         ProtocolDetailFragment.BranchingDelegate,
         ActionListAdapter.ActionDelegate,
-        TimerFragment.TimerStepFragmentDelegate
+        TimerFragment.TimerStepFragmentDelegate,
+        KeyboardViewPager.NavigationDelegate
 {
 
     private val detailFragment get() = supportFragmentManager.findFragmentById(R.id.protocol_detail_container) as ProtocolDetailFragment
@@ -103,12 +105,14 @@ class ProtocolDetailActivity : BaseActivity(),
     }
 
     override fun selectBranchInstructionResult(current: Instruction) {
-        ResultDialogFragment()
-                .withArguments(ResultDialogFragment.DIALOG_INSTRUCTION_ITEM to current)
-                .also{
-                    it.resultDelegate = this
-                }
-                .show(supportFragmentManager, "result-dialog")
+        if(supportFragmentManager.findFragmentByTag("result-dialog") == null) {
+            ResultDialogFragment()
+                    .withArguments(ResultDialogFragment.DIALOG_INSTRUCTION_ITEM to current)
+                    .also{
+                        it.resultDelegate = this
+                    }
+                    .show(supportFragmentManager, "result-dialog")
+        }
     }
 
     override fun handleAction(action: Action, onFinish: (() -> Unit)? ){
@@ -164,9 +168,9 @@ class ProtocolDetailActivity : BaseActivity(),
         })
     }
 
-    override fun onTimerStepFinished() {
-        detailFragment.nextPage()
-    }
+    override fun onTimerStepFinished() = detailFragment.nextPage()
+    override fun onLeftDpad() = detailFragment.previousPage()
+    override fun onRightDpad() = detailFragment.nextPage()
 
     companion object {
         const val PROTOCOL_ITEM = "protocol-detail-protocol-item"
