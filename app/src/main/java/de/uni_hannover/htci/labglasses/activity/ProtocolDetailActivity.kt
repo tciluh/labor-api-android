@@ -106,12 +106,18 @@ class ProtocolDetailActivity : BaseActivity(),
 
     override fun selectBranchInstructionResult(current: Instruction) {
         if(supportFragmentManager.findFragmentByTag("result-dialog") == null) {
-            ResultDialogFragment()
-                    .withArguments(ResultDialogFragment.DIALOG_INSTRUCTION_ITEM to current)
-                    .also{
-                        it.resultDelegate = this
-                    }
-                    .show(supportFragmentManager, "result-dialog")
+            try {
+                ResultDialogFragment()
+                        .withArguments(ResultDialogFragment.DIALOG_INSTRUCTION_ITEM to current)
+                        .also{
+                            it.resultDelegate = this
+                        }
+                        .show(supportFragmentManager, "result-dialog")
+            }
+            catch(e: IllegalStateException) {
+                debug { "couldnt show resultdialogfragment: ${e.cause} (${e.message}\n${e.stackTrace}"}
+            }
+
         }
     }
 

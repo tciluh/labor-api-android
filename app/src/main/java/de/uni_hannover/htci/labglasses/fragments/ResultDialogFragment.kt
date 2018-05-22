@@ -35,12 +35,12 @@ class ResultDialogFragment: DialogFragment(), KeyboardViewPager.NavigationDelega
         result_pager_tabstrip.drawFullUnderline = false
         result_pager.navigationDelegate = this
         dialog_cancel_button.setOnClickListener {
-            this.dismiss()
+            this.dismissAllowingStateLoss()
         }
         dialog_okay_button.setOnClickListener{
             val result = instruction.results[result_pager.currentItem]
             resultDelegate?.onResultSelect(result)
-            this.dismiss()
+            this.dismissAllowingStateLoss()
         }
     }
 
@@ -62,7 +62,7 @@ class ResultDialogFragment: DialogFragment(), KeyboardViewPager.NavigationDelega
     override fun onCenterDpad() {
         val result = instruction.results[result_pager.currentItem]
         resultDelegate?.onResultSelect(result)
-        this.dismiss()
+        this.dismissAllowingStateLoss()
     }
 
     private val instruction: Instruction get() = arguments.getParcelable(DIALOG_INSTRUCTION_ITEM)

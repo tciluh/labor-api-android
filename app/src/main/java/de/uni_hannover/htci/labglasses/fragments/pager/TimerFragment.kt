@@ -57,10 +57,10 @@ class TimerFragment: Fragment(), PagingAwareFragment {
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
         countdown?.cancel()
         outState?.putLong(DURATION_KEY, duration)
         outState?.putLong(DURATION_LEFT_KEY, durationLeft)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {

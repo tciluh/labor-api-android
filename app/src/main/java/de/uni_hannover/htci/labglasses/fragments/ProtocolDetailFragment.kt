@@ -17,7 +17,6 @@ import de.uni_hannover.htci.labglasses.model.Action
 import de.uni_hannover.htci.labglasses.model.Instruction
 import de.uni_hannover.htci.labglasses.model.Result
 import de.uni_hannover.htci.labglasses.views.KeyboardViewPager
-
 import kotlinx.android.synthetic.main.protocol_detail.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
