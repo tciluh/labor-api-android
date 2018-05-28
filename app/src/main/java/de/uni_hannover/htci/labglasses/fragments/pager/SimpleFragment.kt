@@ -3,7 +3,6 @@ package de.uni_hannover.htci.labglasses.fragments.pager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.preference.PreferenceManager
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -54,8 +53,8 @@ class SimpleFragment: Fragment(), UpdateableFragment, PagingAwareFragment {
                 actionRecyclerView.layoutManager = LinearLayoutManager(context)
                 actionRecyclerView.visibility = View.VISIBLE
                 //setup cell divider
-                val dividerItemDecoration = DividerItemDecoration(actionRecyclerView.context, DividerItemDecoration.VERTICAL)
-                actionRecyclerView.addItemDecoration(dividerItemDecoration)
+                //val dividerItemDecoration = DividerItemDecoration(actionRecyclerView.context, DividerItemDecoration.VERTICAL)
+                //actionRecyclerView.addItemDecoration(dividerItemDecoration)
             }
         }
         if(actionRecyclerView.visibility == View.VISIBLE && imageView.visibility == View.VISIBLE) {

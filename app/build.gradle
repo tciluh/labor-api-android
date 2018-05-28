@@ -10,14 +10,14 @@ androidExtensions {
 }
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 'Vuzix Corporation:Vuzix M300 SDK:23'
     buildToolsVersion '27.0.3'
 
 
     defaultConfig {
         applicationId "de.uni_hannover.htci.labglasses"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -33,31 +33,28 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:support-v4:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:preference-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:appcompat-v7:23.4.0'
+    implementation 'com.android.support:support-v4:23.4.0'
+    implementation 'com.android.support:recyclerview-v7:23.4.0'
+    implementation 'com.android.support:preference-v7:23.4.0'
+    implementation 'com.android.support:design:23.4.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-
     /////////////////////
     //custom dependencies
     /////////////////////
-
     //image download/showing
     implementation 'com.squareup.picasso:picasso:2.5.2'
-
     //math evaluation
     implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.1.1'
-
     //math rendering
-    implementation 'com.github.Nishant-Pathak:MathView:v1.1'
-
+    implementation('com.github.Nishant-Pathak:MathView:v1.1') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
     //anko kotlin helpers
     implementation "org.jetbrains.anko:anko:$anko_version"
     //rxjava + android extensions
@@ -65,7 +62,6 @@ dependencies {
     // Because RxAndroid releases are few and far between, it is recommended you also
     // explicitly depend on RxJava's latest version for bug fixes and new features.
     implementation 'io.reactivex.rxjava2:rxjava:2.1.6'
-
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     //moshi
@@ -77,13 +73,11 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-moshi:2.3.0'
     //retrofit -> rxjava2 return types call adapter
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-
     // socketio-java
-    implementation ('io.socket:socket.io-client:1.0.0') {
+    implementation('io.socket:socket.io-client:1.0.0') {
         // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'
     }
-
     //multidex support for kotlin > 1.2.0
     implementation 'com.android.support:multidex:1.0.3'
 }

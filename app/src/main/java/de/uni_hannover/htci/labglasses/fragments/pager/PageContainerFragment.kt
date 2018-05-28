@@ -37,9 +37,15 @@ open class PageContainerFragment: Fragment(), AnkoLogger, UpdateableFragment, Pa
         }
         else {
             val fragment = this.childFragmentManager.findFragmentById(R.id.contentContainer)
-            fragment.arguments = this.arguments
+            updateArguments(fragment.arguments)
         }
         return inflater?.inflate(R.layout.base_instruction, container, false)
+    }
+
+    private fun updateArguments(old: Bundle) {
+        old.putParcelable(INSTRUCTION_ITEM, instruction)
+        old.putSerializable(MEASUREMENTS_ITEM, measurements?.toMap(HashMap()))
+        old.putParcelable(RESULT_ITEM, result)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -59,7 +65,7 @@ open class PageContainerFragment: Fragment(), AnkoLogger, UpdateableFragment, Pa
         val fragment = this.childFragmentManager.findFragmentById(R.id.contentContainer)
         fragment?.let {
             if(it is UpdateableFragment){
-                it.arguments = this.arguments
+                updateArguments(it.arguments)
                 it.onArgumentsChanged()
             }
         }

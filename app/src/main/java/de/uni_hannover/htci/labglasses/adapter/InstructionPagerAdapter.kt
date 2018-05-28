@@ -77,8 +77,8 @@ class InstructionPagerAdapter(fm: FragmentManager?, protocol: Protocol, private 
 
     fun instructionAtIndex(index: Int): Instruction? = displayedInstructions.getOrNull(index)
 
-    private fun generatePageFragmentBundle(position: Int): Bundle {
-        return Bundle().also {
+    private fun generatePageFragmentBundle(position: Int, previous: Bundle? = null): Bundle {
+        return (previous ?: Bundle()).also {
             it.putParcelable(INSTRUCTION_ITEM, instructionAtIndex(position))
             it.putSerializable(MEASUREMENTS_ITEM, measurements.toMap(HashMap()))
         }
@@ -108,7 +108,7 @@ class InstructionPagerAdapter(fm: FragmentManager?, protocol: Protocol, private 
         if(info != null
                 && info.fragment is UpdateableFragment
                 && info.type == Instruction.Companion.InstructionType.Simple) {
-            info.fragment.arguments = generatePageFragmentBundle(currentPos)
+            generatePageFragmentBundle(currentPos, info.fragment.arguments)
             info.fragment.onArgumentsChanged()
         }
     }

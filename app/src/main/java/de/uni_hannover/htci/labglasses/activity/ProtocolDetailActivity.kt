@@ -22,6 +22,8 @@ import de.uni_hannover.htci.labglasses.views.KeyboardViewPager
 import kotlinx.android.synthetic.main.activity_protocol_detail.*
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.support.v4.withArguments
+import com.vuzix.sdk.speechrecognitionservice.VuzixSpeechClient
+
 
 /**
  * An activity representing a single Protocol detail screen. This
