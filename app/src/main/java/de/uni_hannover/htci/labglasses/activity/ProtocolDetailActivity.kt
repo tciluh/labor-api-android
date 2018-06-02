@@ -2,7 +2,9 @@ package de.uni_hannover.htci.labglasses.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.NavUtils
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import de.uni_hannover.htci.labglasses.R
@@ -16,13 +18,13 @@ import de.uni_hannover.htci.labglasses.model.Instruction
 import de.uni_hannover.htci.labglasses.model.Protocol
 import de.uni_hannover.htci.labglasses.model.Result
 import de.uni_hannover.htci.labglasses.singletons.SocketManager
-import de.uni_hannover.htci.labglasses.utils.consume
 import de.uni_hannover.htci.labglasses.utils.withTransaction
 import de.uni_hannover.htci.labglasses.views.KeyboardViewPager
 import kotlinx.android.synthetic.main.activity_protocol_detail.*
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.support.v4.withArguments
 import com.vuzix.sdk.speechrecognitionservice.VuzixSpeechClient
+import java.security.Key
 
 
 /**
@@ -42,7 +44,7 @@ class ProtocolDetailActivity : BaseActivity(),
     private val detailFragment get() = supportFragmentManager.findFragmentById(R.id.protocol_detail_container) as ProtocolDetailFragment
     private val completedMeasurements: MutableMap<String, Double> = mutableMapOf()
     private val protocol: Protocol get() = intent.getParcelableExtra(PROTOCOL_ITEM)
-
+    private lateinit var speechClient: VuzixSpeechClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +72,23 @@ class ProtocolDetailActivity : BaseActivity(),
             supportFragmentManager.withTransaction {
                add(R.id.protocol_detail_container, fragment)
             }
+            speechClient = VuzixSpeechClient(this)
+            // add our phrases
+            speechClient.insertKeycodePhrase("next step", KeyEvent.KEYCODE_DPAD_RIGHT)
+            speechClient.insertKeycodePhrase("previous step", KeyEvent.KEYCODE_DPAD_LEFT)
+            speechClient.insertKeycodePhrase("next result", KeyEvent.KEYCODE_DPAD_RIGHT)
+            speechClient.insertKeycodePhrase("previous result", KeyEvent.KEYCODE_DPAD_LEFT)
+            speechClient.insertKeycodePhrase("select result", KeyEvent.KEYCODE_DPAD_CENTER)
+            speechClient.insertKeycodePhrase("end protocol", KeyEvent.KEYCODE_BACK)
+            // try enabling the hello vuzix phrase
+            try {
+                VuzixSpeechClient.EnableRecognizer(applicationContext, true)
+            } catch (e: NoSuchMethodError) {
+                // This is not an M300 version 1.2.5 or higher
+                Snackbar.make(protocol_detail_container, "Error enabling voice services, please update your M300!", 2).show()
+            }
+
+
         }
     }
 

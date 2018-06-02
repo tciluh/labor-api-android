@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import de.uni_hannover.htci.labglasses.model.Protocol
+import kotlin.math.abs
 
 /**
  * Created by sl33k on 11/9/17.
@@ -44,9 +45,21 @@ class ProtocolListAdapter(onSelectHandler: (ViewType) -> Unit) : RecyclerView.Ad
     }
 
     fun setProtocols(protocols: List<Protocol>){
+        val prev = items.size
+        val diff = protocols.size - prev
         items.clear()
         items.addAll(protocols)
-        notifyDataSetChanged()
+        when {
+            diff == 0 -> notifyItemRangeChanged(0, prev)
+            diff < 0 -> {
+                notifyItemRangeChanged(0, prev + diff)
+                notifyItemRangeRemoved(prev + diff - 1, abs(diff))
+            }
+            diff > 0 -> {
+                notifyItemRangeChanged(0, prev)
+                notifyItemRangeInserted(prev, diff)
+            }
+        }
     }
 
 

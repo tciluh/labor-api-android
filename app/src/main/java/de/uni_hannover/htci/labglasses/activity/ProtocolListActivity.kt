@@ -1,10 +1,13 @@
 package de.uni_hannover.htci.labglasses.activity
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import com.vuzix.sdk.speechrecognitionservice.VuzixSpeechClient
 import de.uni_hannover.htci.labglasses.R
 import de.uni_hannover.htci.labglasses.adapter.ProtocolListAdapter
 import de.uni_hannover.htci.labglasses.adapter.ViewType
@@ -55,6 +58,9 @@ class ProtocolListActivity : BaseActivity(){
         recyclerView.adapter as ProtocolListAdapter
     }
 
+    private lateinit var speechClient: VuzixSpeechClient
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_protocol_list)
@@ -76,6 +82,15 @@ class ProtocolListActivity : BaseActivity(){
 
         //load protocols
         refreshProtocols()
+
+        if(savedInstanceState == null) {
+            speechClient = VuzixSpeechClient(this)
+            speechClient.insertKeycodePhrase("next protocol", KeyEvent.KEYCODE_DPAD_DOWN)
+            speechClient.insertKeycodePhrase("previous protocol", KeyEvent.KEYCODE_DPAD_UP)
+            speechClient.insertKeycodePhrase("refresh protocols", KeyEvent.KEYCODE_F5)
+            speechClient.insertKeycodePhrase("begin protocol", KeyEvent.KEYCODE_ENTER)
+        }
+
     }
 
     private fun refreshProtocols() {
@@ -88,12 +103,23 @@ class ProtocolListActivity : BaseActivity(){
                     swipeRefreshLayout.isRefreshing = false
                     debug("got api response: $list")
                     listAdapter.setProtocols(list)
+                    focusFirstItem(Handler())
 
                 }, { error ->
                     Snackbar.make(recyclerView, "An Error occurred", 2000).show()
                     swipeRefreshLayout.isRefreshing = false
                     error("error loading api data: $error")
                 })
+    }
+
+    private fun focusFirstItem(handler: Handler) {
+        handler.post {
+            if(!recyclerView.isComputingLayout) {
+                val view = recyclerView.findViewHolderForAdapterPosition(0)
+                view?.itemView?.requestFocus()
+            }
+            else focusFirstItem(handler)
+        }
     }
 
     private fun onItemSelect(item: ViewType) {
@@ -132,6 +158,14 @@ class ProtocolListActivity : BaseActivity(){
                 }
             }
             else -> super.onOptionsItemSelected(item)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean = when (keyCode) {
+            KeyEvent.KEYCODE_F5 -> consume {
+                refreshProtocols()
+            }
+            else -> super.onKeyUp(keyCode, event)
         }
+
 
 }
