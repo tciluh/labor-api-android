@@ -84,11 +84,17 @@ class ProtocolListActivity : BaseActivity(){
         refreshProtocols()
 
         if(savedInstanceState == null) {
-            speechClient = VuzixSpeechClient(this)
-            speechClient.insertKeycodePhrase("next protocol", KeyEvent.KEYCODE_DPAD_DOWN)
-            speechClient.insertKeycodePhrase("previous protocol", KeyEvent.KEYCODE_DPAD_UP)
-            speechClient.insertKeycodePhrase("refresh protocols", KeyEvent.KEYCODE_F5)
-            speechClient.insertKeycodePhrase("begin protocol", KeyEvent.KEYCODE_ENTER)
+            try {
+                speechClient = VuzixSpeechClient(this)
+                speechClient.insertKeycodePhrase("next protocol", KeyEvent.KEYCODE_DPAD_DOWN)
+                speechClient.insertKeycodePhrase("previous protocol", KeyEvent.KEYCODE_DPAD_UP)
+                speechClient.insertKeycodePhrase("refresh protocols", KeyEvent.KEYCODE_F5)
+                speechClient.insertKeycodePhrase("begin protocol", KeyEvent.KEYCODE_ENTER)
+            }
+            catch(e: NoClassDefFoundError) {
+                error("VuzixSpeechClient not found. Am I running on a updated M300?")
+            }
+
         }
 
     }

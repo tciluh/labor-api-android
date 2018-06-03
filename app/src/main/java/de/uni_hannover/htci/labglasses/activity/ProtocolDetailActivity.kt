@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.activity_protocol_detail.*
 import org.jetbrains.anko.debug
 import org.jetbrains.anko.support.v4.withArguments
 import com.vuzix.sdk.speechrecognitionservice.VuzixSpeechClient
+import org.jetbrains.anko.error
 import java.security.Key
 
 
@@ -72,20 +73,28 @@ class ProtocolDetailActivity : BaseActivity(),
             supportFragmentManager.withTransaction {
                add(R.id.protocol_detail_container, fragment)
             }
-            speechClient = VuzixSpeechClient(this)
-            // add our phrases
-            speechClient.insertKeycodePhrase("next step", KeyEvent.KEYCODE_DPAD_RIGHT)
-            speechClient.insertKeycodePhrase("previous step", KeyEvent.KEYCODE_DPAD_LEFT)
-            speechClient.insertKeycodePhrase("next result", KeyEvent.KEYCODE_DPAD_RIGHT)
-            speechClient.insertKeycodePhrase("previous result", KeyEvent.KEYCODE_DPAD_LEFT)
-            speechClient.insertKeycodePhrase("select result", KeyEvent.KEYCODE_DPAD_CENTER)
-            speechClient.insertKeycodePhrase("end protocol", KeyEvent.KEYCODE_BACK)
+            try {
+                speechClient = VuzixSpeechClient(this)
+                // add our phrases
+                speechClient.insertKeycodePhrase("next step", KeyEvent.KEYCODE_DPAD_RIGHT)
+                speechClient.insertKeycodePhrase("previous step", KeyEvent.KEYCODE_DPAD_LEFT)
+                speechClient.insertKeycodePhrase("next result", KeyEvent.KEYCODE_DPAD_RIGHT)
+                speechClient.insertKeycodePhrase("previous result", KeyEvent.KEYCODE_DPAD_LEFT)
+                speechClient.insertKeycodePhrase("select result", KeyEvent.KEYCODE_DPAD_CENTER)
+                speechClient.insertKeycodePhrase("end protocol", KeyEvent.KEYCODE_BACK)
+            }
+            catch(e: NoClassDefFoundError) {
+
+            }
             // try enabling the hello vuzix phrase
             try {
                 VuzixSpeechClient.EnableRecognizer(applicationContext, true)
             } catch (e: NoSuchMethodError) {
                 // This is not an M300 version 1.2.5 or higher
                 Snackbar.make(protocol_detail_container, "Error enabling voice services, please update your M300!", 2).show()
+            }
+            catch(e: NoClassDefFoundError) {
+                error("VuzixSpeechClient not found. Am I running on a updated M300?")
             }
 
 
