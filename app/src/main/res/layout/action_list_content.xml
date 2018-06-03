@@ -12,7 +12,7 @@
     tools:layout_editor_absoluteY="81dp">
 
     <TextView
-        android:id="@+id/identifier"
+        android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="14dp"
@@ -25,7 +25,7 @@
         tools:text="Photometer" />
 
     <TextView
-        android:id="@+id/action"
+        android:id="@+id/additionalInfo"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_marginBottom="4dp"
@@ -33,8 +33,8 @@
         android:text="measure"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/identifier"
-        app:layout_constraintTop_toBottomOf="@+id/identifier" />
+        app:layout_constraintStart_toStartOf="@+id/name"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <TextView
         android:id="@+id/result"

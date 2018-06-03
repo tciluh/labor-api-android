@@ -11,8 +11,9 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @SuppressLint("ParcelCreator")
 data class Action(val id: Int,
-                  val identifier: String,
+                  val plugin: String,
                   val action: String,
+                  val humanReadableName: String,
                   val arguments: Map<String, String>,
                   val equationIdentifier: String?,
                   var state: MeasurementState = MeasurementState.NotStarted ,
@@ -24,7 +25,7 @@ data class Action(val id: Int,
     }
     override fun hashCode(): Int = this.id
 
-    fun copy(): Action = Action(id, identifier, action, arguments.toMap(), equationIdentifier, state, results.toMutableList())
+    fun copy(): Action = Action(id, plugin, action, humanReadableName, arguments.toMap(), equationIdentifier, state, results.toMutableList())
 
     enum class MeasurementState {
         NotStarted,
