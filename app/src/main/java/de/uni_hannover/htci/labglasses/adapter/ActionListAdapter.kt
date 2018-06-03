@@ -1,12 +1,8 @@
 package de.uni_hannover.htci.labglasses.adapter
 
-import android.os.Handler
-import android.os.Looper
-import android.provider.Settings.Global.getString
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -38,8 +34,8 @@ class ActionListAdapter(var actions: Array<Action>): RecyclerView.Adapter<Action
         if(holder == null) return
 
         val item = actions[position]
-        holder.actionView.text = item.action
-        holder.identifierView.text = item.identifier
+        holder.nameView.text = item.humanReadableName
+        holder.additionalInfoView.text = "${item.plugin}/${item.action}"
         holder.errorButton.setOnClickListener {
             delegate?.handleAction(item)
         }
@@ -107,8 +103,8 @@ class ActionListAdapter(var actions: Array<Action>): RecyclerView.Adapter<Action
     }
 
     class ActionViewHolder(itemView: View?): RecyclerView.ViewHolder(itemView) {
-        val identifierView: TextView = itemView?.identifier ?: throw IllegalStateException("cant find identifier view")
-        val actionView: TextView = itemView?.action ?: throw IllegalStateException("cant find action view")
+        val nameView: TextView = itemView?.name ?: throw IllegalStateException("cant find identifier view")
+        val additionalInfoView: TextView = itemView?.additionalInfo ?: throw IllegalStateException("cant find action view")
         val resultView: TextView = itemView?.result ?: throw IllegalStateException("cant find result view")
         val progressSpinner: ProgressBar = itemView?.inProgressSpinner ?: throw IllegalStateException("cant find progress spinner")
         val errorButton: ImageView = itemView?.errorButton ?: throw IllegalStateException("cant find error view")
