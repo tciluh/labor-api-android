@@ -14,6 +14,7 @@ class KeyboardViewPager(ctx: Context, attr: AttributeSet): ViewPager(ctx, attr) 
     }
 
     var navigationDelegate: NavigationDelegate? = null
+    var touchPagingEnabled: Boolean = true
 
     override fun executeKeyEvent(event: KeyEvent?): Boolean {
         return when(event?.keyCode) {
@@ -34,5 +35,9 @@ class KeyboardViewPager(ctx: Context, attr: AttributeSet): ViewPager(ctx, attr) 
             }
             else -> super.executeKeyEvent(event)
         }
+    }
+
+    override fun canScrollHorizontally(direction: Int): Boolean {
+        return touchPagingEnabled && super.canScrollHorizontally(direction)
     }
 }
