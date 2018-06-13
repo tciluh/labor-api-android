@@ -1,8 +1,38 @@
-<de.uni_hannover.htci.labglasses.views.KeyboardViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<de.uni_hannover.htci.labglasses.views.KeyboardViewPager
     android:id="@+id/protocol_pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_above="@+id/button_layout"
     android:focusable="true"
     >
 
 </de.uni_hannover.htci.labglasses.views.KeyboardViewPager>
+
+<LinearLayout
+    android:id="@+id/button_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_alignParentBottom="true"
+    >
+
+    <Button
+        android:id="@+id/next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/protocol_pager_previous" />
+
+    <Button
+        android:id="@+id/previous_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/protocol_pager_next" />
+</LinearLayout>
+</RelativeLayout>

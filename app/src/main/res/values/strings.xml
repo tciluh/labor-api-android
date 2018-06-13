@@ -19,5 +19,7 @@
     <string name="action_dialog_title">Actions</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_okay">Okay</string>
+    <string name="protocol_pager_next">Next Step</string>
+    <string name="protocol_pager_previous">Previous Step</string>
     <string name="action_item_not_started">-</string>
 </resources>

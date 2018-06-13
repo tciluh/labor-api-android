@@ -33,7 +33,7 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
         ViewPager.OnPageChangeListener {
 
     interface BranchingDelegate  {
-        fun selectBranchInstructionResult(current: Instruction);
+        fun selectBranchInstructionResult(current: Instruction)
     }
 
     private val protocol: Protocol by lazy {
@@ -52,9 +52,19 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         adapter = InstructionPagerAdapter(childFragmentManager, protocol, mapOf())
+
         protocol_pager.adapter = adapter
         protocol_pager.addOnPageChangeListener(this)
         protocol_pager.navigationDelegate = (activity as KeyboardViewPager.NavigationDelegate)
+        protocol_pager.touchPagingEnabled = false
+
+        next_button.setOnClickListener { _ ->
+            nextPage()
+        }
+        previous_button.setOnClickListener{ _ ->
+            previousPage()
+        }
+
         activity.title = protocol.name
 
         protocol_pager.requestFocus()
