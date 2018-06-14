@@ -15,7 +15,11 @@ import org.jetbrains.anko.support.v4.withArguments
 /**
  * Created by sl33k on 1/5/18.
  */
-open class PageContainerFragment: Fragment(), AnkoLogger, UpdateableFragment, PagingAwareFragment {
+open class PageContainerFragment: Fragment(),
+        AnkoLogger,
+        UpdateableFragment,
+        PagingAwareFragment,
+        InstructionFragment {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if(savedInstanceState == null) {
@@ -87,5 +91,15 @@ open class PageContainerFragment: Fragment(), AnkoLogger, UpdateableFragment, Pa
                 it.onPageVisible()
             }
         }
+    }
+
+    override fun isFinished(): Boolean {
+        val fragment = this.childFragmentManager.findFragmentById(R.id.contentContainer)
+        fragment?.let {
+            if(it is InstructionFragment){
+                return it.isFinished()
+            }
+        }
+        return true
     }
 }

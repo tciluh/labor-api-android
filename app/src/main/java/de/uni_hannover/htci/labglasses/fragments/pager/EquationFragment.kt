@@ -16,7 +16,7 @@ import org.mariuszgromada.math.mxparser.Constant
  * This fragment displays a simple math equation with automatic calculation with the passed
  * measurements map.
  */
-class EquationFragment: Fragment(), UpdateableFragment {
+class EquationFragment: Fragment(), UpdateableFragment, InstructionFragment {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater?.inflate(R.layout.equation_instruction, container, false)
@@ -39,4 +39,6 @@ class EquationFragment: Fragment(), UpdateableFragment {
             }
         }
     }
+
+    override fun isFinished(): Boolean = true
 }

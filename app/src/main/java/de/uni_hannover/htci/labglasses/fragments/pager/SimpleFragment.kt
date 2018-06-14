@@ -13,13 +13,14 @@ import de.uni_hannover.htci.labglasses.activity.BaseActivity.Companion.API_HOST_
 import de.uni_hannover.htci.labglasses.activity.BaseActivity.Companion.API_PORT_PREFERENCE
 import de.uni_hannover.htci.labglasses.R
 import de.uni_hannover.htci.labglasses.adapter.ActionListAdapter
+import kotlinx.android.synthetic.main.action_list_content.*
 import kotlinx.android.synthetic.main.simple_instruction.*
 
 /**
  * Created by sl33k on 1/5/18.
  * The Fragment that display a simple instruction or result with a picture
  */
-class SimpleFragment: Fragment(), UpdateableFragment, PagingAwareFragment {
+class SimpleFragment: Fragment(), UpdateableFragment, PagingAwareFragment, InstructionFragment {
     lateinit var host: String
     lateinit var port: String
 
@@ -71,9 +72,16 @@ class SimpleFragment: Fragment(), UpdateableFragment, PagingAwareFragment {
 
     override fun onPageVisible() {
         if(actionRecyclerView.visibility == View.VISIBLE) {
-            (actionRecyclerView.adapter as ActionListAdapter).startNextPendingAction()
+            (actionRecyclerView.adapter as? ActionListAdapter)?.startNextPendingAction()
         }
     }
 
     override fun onPageHidden() = Unit
+
+    override fun isFinished(): Boolean {
+        if(instruction?.actions != null) {
+            return (actionRecyclerView.adapter as? ActionListAdapter)?.allActionsFinished() ?: false
+        }
+        return true
+    }
 }

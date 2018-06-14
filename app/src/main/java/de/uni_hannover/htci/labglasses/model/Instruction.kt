@@ -28,25 +28,28 @@ data class Instruction(val id: Int, val isFirst: Boolean, val description: Strin
     fun actionForId(actionId: Int) = this.actions.first { it.id == actionId }
 
     val isBranchInstruction get() = this.results.size > 1
+    val isPotentiallyUnfinishedInstruction get() = type == InstructionType.Timer || (type == InstructionType.Simple && actions.isNotEmpty())
 
-    val type: InstructionType get() {
-        if (this.equation != null && this.timerDuration == null) {
-           return InstructionType.Equation
+    val type: InstructionType get()
+    = if (this.equation != null && this.timerDuration == null) {
+           InstructionType.Equation
         }
         else if(this.equation == null && this.timerDuration != null) {
-            return InstructionType.Timer
+            InstructionType.Timer
         }
         else if (this.equation != null && this.timerDuration != null) {
-            return InstructionType.Invalid
+            InstructionType.Invalid
         }
         else {
-            return InstructionType.Simple
+            InstructionType.Simple
         }
-    }
+
 
     val nextInstructionId: Int? get() {
         //we cant determine a definitive next instruction if the result is unambiguous
         if(this.isBranchInstruction)
+            return null
+        if(this.isPotentiallyUnfinishedInstruction)
             return null
         val result = this.results.firstOrNull()
         return result?.targetInstructionId

@@ -94,12 +94,16 @@ class ActionListAdapter(var actions: Array<Action>): RecyclerView.Adapter<Action
     }
 
     fun startNextPendingAction() {
-        val action = actions.firstOrNull { a -> a.state == MeasurementState.NotStarted }
+        val action = actions.firstOrNull { it.state == MeasurementState.NotStarted }
         action?.let {
             delegate?.handleAction(it, {
                 startNextPendingAction()
             })
         }
+    }
+
+    fun allActionsFinished(): Boolean {
+        return actions.all { it.state == MeasurementState.Done }
     }
 
     class ActionViewHolder(itemView: View?): RecyclerView.ViewHolder(itemView) {

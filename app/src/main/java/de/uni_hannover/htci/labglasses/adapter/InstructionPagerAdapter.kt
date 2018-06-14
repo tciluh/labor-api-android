@@ -129,4 +129,11 @@ class InstructionPagerAdapter(fm: FragmentManager?, protocol: Protocol, private 
         }
     }
 
+    fun isFinished(index: Int): Boolean {
+        val info = fragmentInfo[index]
+        if(info != null && info.fragment is InstructionFragment){
+            return info.fragment.isFinished()
+        }
+        return true
+    }
 }

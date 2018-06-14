@@ -106,6 +106,15 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
             // the next page is not preloaded therefore check if there is a next instruction after
             // this one
             val instruction = adapter?.instructionAtIndex(current)
+            // first make sure that the current instruction is finished. otherwise we can't forward anyway
+            if(instruction != null && instruction.isPotentiallyUnfinishedInstruction) {
+                val adapter = protocol_pager.adapter as InstructionPagerAdapter
+                if(!adapter.isFinished(protocol_pager.currentItem)) {
+                    toast("can't forward to next step, please finish this step first!").show()
+                    return
+                }
+            }
+
             if(instruction != null && instruction.isBranchInstruction) {
                 //ask delegate which instruction to take next
                 (activity as BranchingDelegate).selectBranchInstructionResult(instruction)

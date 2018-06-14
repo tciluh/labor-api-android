@@ -22,6 +22,11 @@ interface PagingAwareFragment {
     fun onPageHidden()
 }
 
+interface InstructionFragment {
+    /* called to determine if this instruction can be forwarded */
+    fun isFinished(): Boolean
+}
+
 const val INSTRUCTION_ITEM = "protocol_step_instruction"
 const val RESULT_ITEM = "protocol_step_result"
 const val MEASUREMENTS_ITEM = "protocol_step_measurements"
