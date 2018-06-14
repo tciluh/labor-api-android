@@ -20,6 +20,7 @@ import de.uni_hannover.htci.labglasses.views.KeyboardViewPager
 import kotlinx.android.synthetic.main.protocol_detail.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.debug
+import org.jetbrains.anko.error
 import org.jetbrains.anko.support.v4.toast
 import org.jetbrains.anko.support.v4.withArguments
 
@@ -74,18 +75,6 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
 
     override fun onPageSelected(position: Int) {
         adapter?.let {
-           if(position == it.count - 1)  {
-               val instruction = it.instructionAtIndex(position)
-               if(instruction != null && !instruction.isBranchInstruction) {
-                   val nextId = instruction.nextInstructionId
-                   if(nextId != null) {
-                       val nextInstruction = protocol.instructionById(nextId)
-                       if(nextInstruction != null) {
-                           it.add(nextInstruction)
-                       }
-                   }
-               }
-           }
             it.onPageHidden(currentVisiblePage)
             currentVisiblePage = position
             it.onPageVisible(currentVisiblePage)
@@ -106,22 +95,24 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
             // the next page is not preloaded therefore check if there is a next instruction after
             // this one
             val instruction = adapter?.instructionAtIndex(current)
+            if(instruction == null) { error { "current instruction is unknown to adapter" }; return }
             // first make sure that the current instruction is finished. otherwise we can't forward anyway
-            if(instruction != null && instruction.isPotentiallyUnfinishedInstruction) {
+            if(instruction.isPotentiallyUnfinishedInstruction) {
                 val adapter = protocol_pager.adapter as InstructionPagerAdapter
                 if(!adapter.isFinished(protocol_pager.currentItem)) {
                     toast("can't forward to next step, please finish this step first!").show()
                     return
                 }
+                // else falltrough to checking for branches
             }
 
-            if(instruction != null && instruction.isBranchInstruction) {
+            if(instruction.isBranchInstruction) {
                 //ask delegate which instruction to take next
                 (activity as BranchingDelegate).selectBranchInstructionResult(instruction)
             }
             else{
                 //otherwise just add the next page unconditionally and scroll there
-                instruction?.nextInstructionId?.let {
+                instruction.nextInstructionId?.let {
                     protocol.instructionById(it)?.let {
                         adapter?.add(it)
                         protocol_pager.currentItem++
