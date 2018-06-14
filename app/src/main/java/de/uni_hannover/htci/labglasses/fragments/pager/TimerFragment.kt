@@ -17,7 +17,7 @@ import org.jetbrains.anko.support.v4.act
  * this fragment displays a countdown that can be started/stopped and reset by the user.
  */
 
-class TimerFragment: Fragment(), PagingAwareFragment {
+class TimerFragment: Fragment(), PagingAwareFragment, InstructionFragment {
     interface TimerStepFragmentDelegate {
         fun onTimerStepFinished()
     }
@@ -89,6 +89,10 @@ class TimerFragment: Fragment(), PagingAwareFragment {
 
     override fun onPageHidden() {
         countdown?.cancel()
+    }
+
+    override fun isFinished(): Boolean {
+        return durationLeft < 1000
     }
 
     private fun onTick(millisUntilFinished: Long) {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.KeyEvent
+import android.view.MotionEvent
 import de.uni_hannover.htci.labglasses.utils.consume
 
 class KeyboardViewPager(ctx: Context, attr: AttributeSet): ViewPager(ctx, attr) {
@@ -14,6 +15,7 @@ class KeyboardViewPager(ctx: Context, attr: AttributeSet): ViewPager(ctx, attr) 
     }
 
     var navigationDelegate: NavigationDelegate? = null
+    var touchPagingEnabled: Boolean = true
 
     override fun executeKeyEvent(event: KeyEvent?): Boolean {
         return when(event?.keyCode) {
@@ -34,5 +36,17 @@ class KeyboardViewPager(ctx: Context, attr: AttributeSet): ViewPager(ctx, attr) 
             }
             else -> super.executeKeyEvent(event)
         }
+    }
+
+    override fun onTouchEvent(ev: MotionEvent?): Boolean {
+        return touchPagingEnabled && super.onTouchEvent(ev)
+    }
+
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        return touchPagingEnabled && super.onInterceptTouchEvent(ev)
+    }
+
+    override fun canScrollHorizontally(direction: Int): Boolean {
+        return touchPagingEnabled && super.canScrollHorizontally(direction)
     }
 }

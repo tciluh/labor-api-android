@@ -1,5 +1,6 @@
 package de.uni_hannover.htci.labglasses.utils
 
+import android.os.Build
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.app.FragmentManager
 import android.view.LayoutInflater
@@ -24,3 +25,5 @@ inline fun consume(f: () -> Unit): Boolean {
 //and then commits the transaction
 inline fun FragmentManager.withTransaction(func: FragmentTransaction.() -> FragmentTransaction) =
     beginTransaction().func().commit()
+
+inline fun isM300(): Boolean = Build.PRODUCT == "m300"

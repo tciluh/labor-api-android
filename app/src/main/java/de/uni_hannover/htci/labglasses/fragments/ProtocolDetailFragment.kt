@@ -1,11 +1,8 @@
 package de.uni_hannover.htci.labglasses.fragments
 
 import android.os.Bundle
-import android.os.Handler
 import android.support.v4.app.Fragment
-import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.view.ViewPager
-import android.support.v4.view.ViewPager.SCROLL_STATE_SETTLING
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,15 +10,14 @@ import de.uni_hannover.htci.labglasses.activity.ProtocolDetailActivity
 import de.uni_hannover.htci.labglasses.R
 import de.uni_hannover.htci.labglasses.model.Protocol
 import de.uni_hannover.htci.labglasses.adapter.InstructionPagerAdapter
-import de.uni_hannover.htci.labglasses.model.Action
 import de.uni_hannover.htci.labglasses.model.Instruction
 import de.uni_hannover.htci.labglasses.model.Result
+import de.uni_hannover.htci.labglasses.utils.isM300
 import de.uni_hannover.htci.labglasses.views.KeyboardViewPager
 import kotlinx.android.synthetic.main.protocol_detail.*
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.debug
+import org.jetbrains.anko.error
 import org.jetbrains.anko.support.v4.toast
-import org.jetbrains.anko.support.v4.withArguments
 
 /**
  * A fragment representing a single Protocol detail screen.
@@ -33,7 +29,7 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
         ViewPager.OnPageChangeListener {
 
     interface BranchingDelegate  {
-        fun selectBranchInstructionResult(current: Instruction);
+        fun selectBranchInstructionResult(current: Instruction)
     }
 
     private val protocol: Protocol by lazy {
@@ -52,9 +48,23 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         adapter = InstructionPagerAdapter(childFragmentManager, protocol, mapOf())
+
         protocol_pager.adapter = adapter
         protocol_pager.addOnPageChangeListener(this)
         protocol_pager.navigationDelegate = (activity as KeyboardViewPager.NavigationDelegate)
+        protocol_pager.touchPagingEnabled = false
+
+        next_button.setOnClickListener { _ ->
+            nextPage()
+        }
+        previous_button.setOnClickListener{ _ ->
+            previousPage()
+        }
+
+        if(isM300()) {
+            button_layout.visibility = View.GONE
+        }
+
         activity.title = protocol.name
 
         protocol_pager.requestFocus()
@@ -64,18 +74,6 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
 
     override fun onPageSelected(position: Int) {
         adapter?.let {
-           if(position == it.count - 1)  {
-               val instruction = it.instructionAtIndex(position)
-               if(instruction != null && !instruction.isBranchInstruction) {
-                   val nextId = instruction.nextInstructionId
-                   if(nextId != null) {
-                       val nextInstruction = protocol.instructionById(nextId)
-                       if(nextInstruction != null) {
-                           it.add(nextInstruction)
-                       }
-                   }
-               }
-           }
             it.onPageHidden(currentVisiblePage)
             currentVisiblePage = position
             it.onPageVisible(currentVisiblePage)
@@ -96,13 +94,24 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
             // the next page is not preloaded therefore check if there is a next instruction after
             // this one
             val instruction = adapter?.instructionAtIndex(current)
-            if(instruction != null && instruction.isBranchInstruction) {
+            if(instruction == null) { error { "current instruction is unknown to adapter" }; return }
+            // first make sure that the current instruction is finished. otherwise we can't forward anyway
+            if(instruction.isPotentiallyUnfinishedInstruction) {
+                val adapter = protocol_pager.adapter as InstructionPagerAdapter
+                if(!adapter.isFinished(protocol_pager.currentItem)) {
+                    toast("can't forward to next step, please finish this step first!").show()
+                    return
+                }
+                // else falltrough to checking for branches
+            }
+
+            if(instruction.isBranchInstruction) {
                 //ask delegate which instruction to take next
                 (activity as BranchingDelegate).selectBranchInstructionResult(instruction)
             }
             else{
                 //otherwise just add the next page unconditionally and scroll there
-                instruction?.nextInstructionId?.let {
+                instruction.nextInstructionId?.let {
                     protocol.instructionById(it)?.let {
                         adapter?.add(it)
                         protocol_pager.currentItem++
