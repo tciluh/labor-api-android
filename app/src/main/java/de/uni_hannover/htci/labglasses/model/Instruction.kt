@@ -49,8 +49,6 @@ data class Instruction(val id: Int, val isFirst: Boolean, val description: Strin
         //we cant determine a definitive next instruction if the result is unambiguous
         if(this.isBranchInstruction)
             return null
-        if(this.isPotentiallyUnfinishedInstruction)
-            return null
         val result = this.results.firstOrNull()
         return result?.targetInstructionId
     }

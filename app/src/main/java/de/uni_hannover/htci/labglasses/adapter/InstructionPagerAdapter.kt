@@ -25,7 +25,8 @@ class InstructionPagerAdapter(fm: FragmentManager?, protocol: Protocol, private 
         //add all non branching instructions after the first instruction to be viewable
         var current = protocol.firstInstruction
         while(true) {
-            val nextId: Int? = current.nextInstructionId
+            if(current.isBranchInstruction || current.isPotentiallyUnfinishedInstruction) break
+            val nextId: Int? = current. nextInstructionId
             if (nextId != null) {
                 val nextInstruction = protocol.instructionById(nextId)
                 if (nextInstruction != null) {
