@@ -1,11 +1,8 @@
 package de.uni_hannover.htci.labglasses.fragments
 
 import android.os.Bundle
-import android.os.Handler
 import android.support.v4.app.Fragment
-import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.view.ViewPager
-import android.support.v4.view.ViewPager.SCROLL_STATE_SETTLING
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,16 +10,14 @@ import de.uni_hannover.htci.labglasses.activity.ProtocolDetailActivity
 import de.uni_hannover.htci.labglasses.R
 import de.uni_hannover.htci.labglasses.model.Protocol
 import de.uni_hannover.htci.labglasses.adapter.InstructionPagerAdapter
-import de.uni_hannover.htci.labglasses.model.Action
 import de.uni_hannover.htci.labglasses.model.Instruction
 import de.uni_hannover.htci.labglasses.model.Result
+import de.uni_hannover.htci.labglasses.utils.isM300
 import de.uni_hannover.htci.labglasses.views.KeyboardViewPager
 import kotlinx.android.synthetic.main.protocol_detail.*
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.debug
 import org.jetbrains.anko.error
 import org.jetbrains.anko.support.v4.toast
-import org.jetbrains.anko.support.v4.withArguments
 
 /**
  * A fragment representing a single Protocol detail screen.
@@ -64,6 +59,10 @@ class ProtocolDetailFragment : Fragment(), AnkoLogger,
         }
         previous_button.setOnClickListener{ _ ->
             previousPage()
+        }
+
+        if(isM300()) {
+            button_layout.visibility = View.GONE
         }
 
         activity.title = protocol.name
