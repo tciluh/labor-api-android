@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -19,18 +20,24 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_alignParentBottom="true"
+    android:background="#e6616161"
+    android:weightSum="2"
     >
 
     <Button
-        android:id="@+id/next_button"
-        android:layout_width="wrap_content"
+        android:id="@+id/previous_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:theme="@style/DarkButton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/protocol_pager_previous" />
 
     <Button
-        android:id="@+id/previous_button"
-        android:layout_width="wrap_content"
+        android:id="@+id/next_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:theme="@style/DarkButton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/protocol_pager_next" />

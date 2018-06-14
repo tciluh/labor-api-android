@@ -22,4 +22,8 @@
         <item name="android:windowNoTitle">false</item>
     </style>
 
+    <style name="DarkButton" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/colorGrey</item>
+    </style>
+
 </resources>
