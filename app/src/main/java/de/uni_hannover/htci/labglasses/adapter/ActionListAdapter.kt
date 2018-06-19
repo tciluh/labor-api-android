@@ -60,7 +60,12 @@ class ActionListAdapter(var actions: Array<Action>): RecyclerView.Adapter<Action
 
             }
             MeasurementState.Done -> {
-                holder.resultView.text = item.result
+                if(item.unit != null) {
+                    holder.resultView.text = "${item.result} ${item.unit}"
+                }
+                else {
+                    holder.resultView.text = item.result
+                }
 
                 holder.resultView.visibility = View.VISIBLE
                 holder.errorButton.visibility = View.INVISIBLE
