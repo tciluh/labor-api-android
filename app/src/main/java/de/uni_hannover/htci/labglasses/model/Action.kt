@@ -16,6 +16,7 @@ data class Action(val id: Int,
                   val humanReadableName: String,
                   val arguments: Map<String, String>,
                   val equationIdentifier: String?,
+                  val unit: String?,
                   var state: MeasurementState = MeasurementState.NotStarted ,
                   private val results: MutableList<Double> = mutableListOf()) : Parcelable {
     override fun equals(other: Any?): Boolean
@@ -25,7 +26,7 @@ data class Action(val id: Int,
     }
     override fun hashCode(): Int = this.id
 
-    fun copy(): Action = Action(id, plugin, action, humanReadableName, arguments.toMap(), equationIdentifier, state, results.toMutableList())
+    fun copy(): Action = Action(id, plugin, action, humanReadableName, arguments.toMap(), equationIdentifier, unit, state, results.toMutableList())
 
     enum class MeasurementState {
         NotStarted,
