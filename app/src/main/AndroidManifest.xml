@@ -28,7 +28,9 @@
             android:name=".activity.ProtocolDetailActivity"
             android:label="@string/title_protocol_detail"
             android:parentActivityName=".activity.ProtocolListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="landscape"
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uni_hannover.htci.labglasses.activity.ProtocolListActivity" />

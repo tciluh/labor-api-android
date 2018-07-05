@@ -1,6 +1,7 @@
 package de.uni_hannover.htci.labglasses.activity
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.NavUtils
@@ -51,6 +52,7 @@ class ProtocolDetailActivity : BaseActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_protocol_detail)
         setSupportActionBar(detail_toolbar)
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         // Show the Up button in the action bar.
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
