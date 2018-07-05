@@ -13,6 +13,7 @@ import kotlin.concurrent.timer
 data class Instruction(val id: Int, val isFirst: Boolean, val description: String, val imageId: Int? = null, val equation: String? = null, val timerDuration: String? = null, val results: Array<Result>, var actions: Array<Action>) : Parcelable {
     init {
         results.sortBy { it.id }
+        actions.sortBy{ it.id }
     }
     override fun equals(other: Any?): Boolean{
         return when (other) {
