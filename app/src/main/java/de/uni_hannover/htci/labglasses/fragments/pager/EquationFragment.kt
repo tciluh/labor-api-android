@@ -10,6 +10,7 @@ import de.uni_hannover.htci.labglasses.R
 import kotlinx.android.synthetic.main.equation_instruction.*
 import org.mariuszgromada.math.mxparser.Argument
 import org.mariuszgromada.math.mxparser.Constant
+import org.mariuszgromada.math.mxparser.Expression
 
 /**
  * Created by sl33k on 1/5/18.
@@ -34,8 +35,15 @@ class EquationFragment: Fragment(), UpdateableFragment, InstructionFragment {
             }
             val input = instruction?.equation
             if (input != null) {
-                val expr = Constant(input, *(args.toTypedArray()))
-                mathView.text = "`${expr.constantName} = ${expr.constantValue}`"
+                val expr = Expression(input, *(args.toTypedArray()))
+                if(!expr.checkSyntax()) {
+                    mathView.text = "error: ${expr.errorMessage}"
+                }
+                else {
+                    val calculated = expr.calculate()
+                    mathView.text = "${instruction?.description} = \$$calculated\$"
+                }
+
             }
         }
     }

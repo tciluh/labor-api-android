@@ -57,7 +57,12 @@ open class PageContainerFragment: Fragment(),
         //set the description text view
         //first try for an instruction
         instruction?.let {
-           descriptionTextView.text = it.description
+            if(instruction?.type == Instruction.Companion.InstructionType.Equation) {
+                descriptionTextView.visibility = View.GONE
+            }
+            else {
+                descriptionTextView.text = it.description
+            }
         }
         //then for a result
         result?.let {
