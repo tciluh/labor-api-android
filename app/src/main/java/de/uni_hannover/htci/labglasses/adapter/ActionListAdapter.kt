@@ -62,12 +62,18 @@ class ActionListAdapter(var actions: Array<Action>): RecyclerView.Adapter<Action
             MeasurementState.Done -> {
                 if(item.hasResult){
                     holder.resultView.text = item.result
+                    if(item.unit != null) {
+                        holder.resultView.text = "${item.result} ${item.unit}"
+                    }
+                    else {
+                        holder.resultView.text = item.result
+
+                    }
                 }
                 else {
                     // no result means result less action -> display nothing
                     holder.resultView.text = "Done"
                 }
-
                 holder.resultView.visibility = View.VISIBLE
                 holder.errorButton.visibility = View.INVISIBLE
                 holder.progressSpinner.visibility = View.INVISIBLE
