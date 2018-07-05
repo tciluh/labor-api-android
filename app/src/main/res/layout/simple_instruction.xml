@@ -9,10 +9,12 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:adjustViewBounds="false"
+        android:background="@android:color/background_dark"
         android:contentDescription="@string/instruction_image"
-        app:srcCompat="@android:color/background_light"
+        android:scaleType="fitCenter"
         android:visibility="gone"
-        />
+        app:srcCompat="@android:color/background_dark" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/actionRecyclerView"
         android:layout_width="match_parent"

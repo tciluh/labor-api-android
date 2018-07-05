@@ -40,7 +40,6 @@ class SimpleFragment: Fragment(), UpdateableFragment, PagingAwareFragment, Instr
         imageId?.let {
             Picasso.with(context)
                     .load("http://$host:$port/image/$it")
-                    .fit()
                     .into(imageView)
             imageView.visibility = View.VISIBLE
         }
