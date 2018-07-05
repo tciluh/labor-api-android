@@ -188,7 +188,7 @@ class ProtocolDetailActivity : BaseActivity(),
                 }
                 else {
                     debug("got result: $result for action: $action, but no equation identifier was set.")
-                    instruction.actionForId(action.id).state = Error
+                    instruction.actionForId(action.id).state = Done
                     detailFragment.onUpdatedInstruction(instruction)
                     onFinish?.invoke()
                 }
